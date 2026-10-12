@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>SJB Writer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="{{ url_for('static', filename='favicon-32x32.png') }}">
+  <link rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{{ url_for('static', filename='favicon-16x16.png') }}">
+  <link rel="apple-touch-icon"
+      href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body>
+
+<!-- ===================== APP CONTAINER ===================== -->
+<div class="container">
+
+  <!-- ===================== LEFT PANEL: CONTEXT BUILDER ===================== -->
+  <div class="left">
+
+  <div class="section-group">
+    <!-- ---------- APP HEADER / GLOBAL CONTROLS ---------- -->
+    <div class="header-row">
+      <h2>Your Writing Helper</h2>
+      <button class="gear-btn" onclick="openSettings()">⚙️</button>
+    </div>
+    <!-- ---------- GLOBAL CONTEXT (Prompts + System) ---------- -->
+    <div class="section" data-weight="prompts">
+      <h3>
+        Prompts
+        <button onclick="createNew('prompts')">+</button>
+        <button onclick="createFolder('prompts')">📁</button>
+      </h3>
+      <div id="promptsList"></div>
+    </div>
+
+    <div class="section" data-weight="system">
+      <h3>
+        System
+        <button onclick="createNew('system')">+</button>
+        <button onclick="createFolder('system')">📁</button>
+      </h3>
+      <div id="systemList"></div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <!-- ---------- PROJECT CONTEXT (Background + Writing) ---------- -->
+    <div class="project-header-row">
+
+        <div id="projectDropdown"
+             onclick="toggleProjectDropdown(event)">
+
+          <h2 id="currentProjectLabel">
+            Project: Default
+          </h2>
+
+          <span class="dropdown-arrow">▼</span>
+
+        </div>
+
+      <span class="menu-btn"
+            onclick="toggleProjectMenu(event)">
+        ⋯
+      </span>
+
+    </div>
+    <div id="projectsList" style="display:none;"></div>
+    <div class="section"  data-weight="background">
+      <h3>
+        Background
+        <button onclick="createNew('background')">+</button>
+        <button onclick="createFolder('background')">📁</button>
+      </h3>
+      <div id="backgroundList"></div>
+    </div>
+
+    <div class="section" data-weight="writing">
+      <h3>
+        Writing
+        <button onclick="createNew('writing')">+</button>
+        <button onclick="createFolder('writing')">📁</button>
+      </h3>
+      <div id="writingList"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================== RIGHT PANEL: WORKSPACE ===================== -->
+<div class="right">
+  <!-- ---------- TITLE INPUT ---------- -->
+  <input id="titleInput" placeholder="Title..." />
+  <!-- ---------- FORMATTING BAR ---------- -->
+  <div class="formatting">
+    <button onclick="wrapSelection('**')"><b>B</b></button>
+    <button onclick="wrapSelection('*')"><i>I</i></button>
+    <button onclick="insertPrefix('## ')">H2</button>
+    <button onclick="insertPrefix('- ')">•</button>
+
+    <select id="fontSelect" onchange="changeEditorFont(this.value)">
+      <option value="Georgia">Georgia</option>
+      <option value="Times New Roman">Times New Roman</option>
+      <option value="Garamond">Garamond</option>
+      <option value="Palatino">Palatino</option>
+      <option value="Arial">Arial</option>
+      <option value="Verdana">Verdana</option>
+      <option value="Trebuchet MS">Trebuchet MS</option>
+      <option value="Courier New">Courier New</option>
+    </select>
+
+    <select id="fontSizeSelect" onchange="changeEditorSize(this.value)">
+      <option value="13px">13</option>
+      <option value="14px">14</option>
+      <option value="15px">15</option>
+      <option value="16px" selected>16</option>
+      <option value="17px">17</option>
+      <option value="18px">18</option>
+    </select>
+  </div>
+
+  <!-- ---------- MAIN EDITOR ---------- -->
+  <textarea id="editor"></textarea>
+  <!-- ---------- AI CONTROL PANEL ---------- -->
+  <div class="bottom">
+    <!-- Prompt Input -->
+    <textarea id="promptBox" placeholder="Instruction..."></textarea>
+
+    <!-- Controls + Status -->
+    <div class="controls">
+      <div style="display:flex; gap:12px; align-items:center;">
+        <div id="tokenMeter">🟢 0 / 128000</div>
+        <div id="wordCount">0 words</div>
+        <div id="activeModel" style="font-size: 12px; opacity: 0.7;">
+          Model: None
+        </div>
+      </div>
+
+      <button type="button" onclick="generate()">Generate</button>
+      <button type="button" id="stopGenerateBtn" onclick="stopGeneration()" disabled>⏹ Stop</button>
+      <button type="button" id="undoGenerateBtn" onclick="undoLastGeneration()" disabled>↩ Undo</button>
+      <button type="button" onclick="saveCurrentFile()">Save</button>
+      <button type="button" onclick="clearPrompt()">ClearPrompt</button>
+
+      <div id="loadingIndicator" style="display:none;">⏳ Thinking...</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+<!-- ===================== SETTINGS MODAL ===================== -->
+<div id="settingsModal" class="modal hidden">
+
+  <div class="modal-content">
+
+    <!-- ===================== MAIN SETTINGS VIEW ===================== -->
+    <div id="settingsMainView">
+      <h2>Settings</h2>
+
+      <div class="settings-section">
+        <div class="models-header">
+          <label>Model</label>
+          <button type="button" onclick="openModelsPanel()">
+            Manage Models
+          </button>
+        </div>
+        <select id="modelName">
+          <option value="">-- Select Model --</option>
+        </select>
+      </div>
+
+      <div class="settings-section">
+        <div class="models-header">
+          <label>Visual Layout</label>
+          <button type="button" onclick="openVisualPanel()">
+            Manage Visual
+          </button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <label>API Key (OpenRouter)</label>
+        <input id="apiKey" type="password" placeholder="sk-..." />
+        <div id="apiKeyStatus" class="settings-note"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button onclick="saveSettings()">Save</button>
+        <button onclick="closeSettings()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- ===================== VISUAL LAYOUT PANEL ===================== -->
+    <div id="settingsVisualView" class="hidden">
+      <h2>Visual Layout</h2>
+
+      <div class="panel-actions">
+        <button onclick="closeVisualPanel()">← Back</button>
+      </div>
+
+      <div class="settings-section">
+        <label>Theme</label>
+       <select id="themeSelect">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="crimson">Crimson</option>
+          <option value="dark-stellar">Dark Stellar</option>
+          <option value="light-stellar">Light Stellar</option>
+        </select>
+      </div>
+
+      <div class="settings-section">
+        <label>Sidebar Font Size</label>
+        <select id="sidebarFontSize">
+          <option value="13px">Normal</option>
+          <option value="15px">Larger</option>
+        </select>
+      </div>
+
+
+      <div class="settings-section">
+        <label>Sidebar Word Counts</label>
+        <div class="checkbox-group">
+          <label>
+            <input
+              type="checkbox"
+              id="showPromptCounts"
+            />
+            Prompt Files
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              id="showSystemCounts"
+            />
+            System Files
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              id="showBackgroundCounts"
+            />
+            Background Files
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              id="showWritingCounts"
+            />
+            Writing Files
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              id="showFolderTotals"
+            />
+            Folder Totals
+          </label>
+        </div>
+      </div>
+
+
+      <div class="modal-actions">
+        <button onclick="saveVisualSettings()">Save</button>
+        <button onclick="closeVisualPanel()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- ===================== MODELS PANEL ===================== -->
+    <div id="settingsModelsView" class="hidden">
+
+      <h2>Manage Models</h2>
+
+      <div class="panel-actions">
+
+        <button onclick="closeModelsPanel()">
+           ← Back
+        </button>
+
+        <button onclick="showAddModelForm()">
+          + Add Model
+        </button>
+
+      </div>
+
+      <div id="modelLabelFilters"></div>
+      <input
+        id="modelSearchInput"
+        type="text"
+        placeholder="Search models..."
+      />
+
+      <div class="models-layout">
+
+        <!-- LEFT: MODEL LIST -->
+        <div id="modelsManagerList"></div>
+
+        <!-- RIGHT: MODEL EDITOR -->
+        <div id="modelEditor"
+             class="model-editor hidden">
+
+          <label>Model ID</label>
+          <div id="editModelIdDisplay" class="model-id-display"></div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input id="editModelIdInput" type="text" class="hidden" placeholder="openai/gpt-4.1" style="flex:1;" />
+            <button id="verifyModelBtn" type="button" class="hidden" onclick="verifyModelId()">Verify</button>
+          </div>
+          <div id="verifyModelStatus" style="font-size:12px; opacity:0.7; min-height:16px;"></div>
+
+          <label>Display Name</label>
+
+          <input id="editModelName"
+                 type="text" />
+
+          <label>Source</label>
+
+          <select id="editModelSource">
+
+            <option value="openrouter">
+              OpenRouter
+            </option>
+
+            <option value="ollama">
+              Ollama
+            </option>
+
+          </select>
+
+          <label>Context Window</label>
+
+          <input id="editModelContext"
+                 type="number" />
+
+          <label>Labels</label>
+
+          <input id="editModelLabels"
+                 type="text"
+                 placeholder="Writing, Fast, Free" />
+
+          <label>Description</label>
+
+          <textarea id="editModelDescription"></textarea>
+
+          <div class="editor-actions">
+
+            <button id="saveModelChangesBtn"
+                    onclick="saveModelChanges()">
+              Save Changes
+            </button>
+
+            <button id="createModelBtn"
+                    class="hidden"
+                    onclick="createModel()">
+              Create Model
+            </button>
+
+            <button id="deleteModelBtn"
+                    class="danger-btn"
+                    onclick="deleteSelectedModel()">
+              Delete Model
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ===================== SCRIPT ENTRY ===================== -->
+<!-- ✅ KEEP SCRIPT HERE -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

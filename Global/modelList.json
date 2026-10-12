@@ -1,0 +1,222 @@
+{
+  "openrouter": [
+    {
+      "id": "openai/gpt-oss-120b:free",
+      "name": "OpenAI: gpt-oss-120b (free)",
+      "source": "openrouter",
+      "context": 131072,
+      "description": "gpt-oss-120b is an open-weight, 117B-parameter Mixture-of-Experts (MoE) language model from OpenAI designed for high-reasoning, agentic, and general-purpose production use cases. It activates 5.1B parameters per forward pass and is optimized...",
+      "labels": [
+        "Free"
+      ]
+    },
+    {
+      "id": "cohere/north-mini-code:free",
+      "name": "Cohere: North Mini Code (free)",
+      "source": "openrouter",
+      "context": 256000,
+      "description": "North Mini Code is Cohere's first agentic coding model and the debut of its North family. A sparse mixture-of-experts model with 30B total parameters and 3B active, it is optimized...",
+      "labels": [
+        "Free"
+      ]
+    },
+    {
+      "id": "tencent/hy3:free",
+      "name": "Tencent: Hy3 (free) (Leaves 7/21)",
+      "source": "openrouter",
+      "context": "262144",
+      "description": "Hy3 is a 295B-parameter Mixture-of-Experts model from Tencent (21B active, 192 experts with top-8 routing) built for reasoning, agentic workflows, and real-world production use. It supports a configurable reasoning effort:...",
+      "labels": [
+        "Free"
+      ]
+    },
+    {
+      "id": "poolside/laguna-m.1:free",
+      "name": "Poolside: Laguna M.1 (free)",
+      "source": "openrouter",
+      "context": 262144,
+      "description": "Laguna M.1 is the flagship coding agent model from [Poolside](https://poolside.ai), optimized for complex software engineering tasks. Designed for agentic coding workflows, it supports tool calling and reasoning, with a 128K...",
+      "labels": [
+        "Free"
+      ]
+    },
+    {
+      "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "name": "Nemotron 3 Ultra (free) - Write, don't Plan",
+      "source": "openrouter",
+      "context": "1000000",
+      "description": "Good writing, but didn't follow outline for Plan",
+      "labels": [
+        "Free"
+      ]
+    },
+    {
+      "id": "openai/gpt-4o",
+      "label": "GPT-4o",
+      "group": "OpenAI",
+      "name": "GPT-4o ",
+      "source": "openrouter",
+      "context": "",
+      "description": "",
+      "labels": []
+    },
+    {
+      "id": "deepseek/deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "source": "openrouter",
+      "context": "1048576",
+      "description": "DeepSeek V4 Flash is an efficiency-optimized Mixture-of-Experts model from DeepSeek with 284B total parameters and 13B activated parameters, supporting a 1M-token context window. It is designed for fast inference and...",
+      "labels": []
+    },
+    {
+      "id": "z-ai/glm-5.2",
+      "name": "Z.ai: GLM 5.2",
+      "source": "openrouter",
+      "context": 1048576,
+      "description": "GLM 5.2 is a large-scale reasoning model from Z.ai. It supports text input and output with a 1M-token context window, and is suited for long-horizon agent workflows, project-level software engineering,...",
+      "labels": []
+    },
+    {
+      "id": "anthropic/claude-sonnet-4.6",
+      "name": "Claude Sonnet 4.6",
+      "source": "openrouter",
+      "context": 0,
+      "description": "",
+      "labels": [
+        "Expensive",
+        "Prose"
+      ]
+    },
+    {
+      "id": "openai/gpt-4o-mini",
+      "label": "GPT-4o Mini",
+      "group": "OpenAI",
+      "name": "GPT-4o-mini",
+      "source": "openrouter",
+      "context": "20000",
+      "description": "Test Model Description",
+      "labels": [
+        "Writing",
+        "Fast"
+      ]
+    },
+    {
+      "id": "openrouter/owl-alpha",
+      "name": "Owl Alpha Free",
+      "source": "openrouter",
+      "context": 1048756,
+      "description": "Owl Alpha is a high-performance foundation model designed for agentic workloads. Natively supports tool use, and long-context tasks, with strong performance in code generation, automated workflows, and complex instruction execution....",
+      "labels": [
+        "Free"
+      ]
+    },
+    {
+      "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+      "name": "NVIDIA: Nemotron... free, poor writing",
+      "source": "openrouter",
+      "context": "256000",
+      "description": "Didn't follow instructions to write in 1st person, too short.",
+      "labels": [
+        "Free"
+      ]
+    },
+    {
+      "id": "poolside/laguna-xs-2.1:free",
+      "name": "Laguna XS 2.1 (free) BAD",
+      "source": "openrouter",
+      "context": "262144",
+      "description": "Writing a plan, it went WAY outside the instructions and outline - unusable.",
+      "labels": [
+        "Free"
+      ]
+    },
+    {
+      "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition",
+      "name": "Venice: Uncensored",
+      "source": "openrouter",
+      "context": "128000",
+      "description": "Venice Uncensored Dolphin Mistral 24B Venice Edition is a fine-tuned variant of Mistral-Small-24B-Instruct-2501, developed by dphn.ai in collaboration with Venice.ai. This model is designed as an \u201cuncensored\u201d instruct-tuned LLM, preserving...",
+      "labels": [
+        "Cheap",
+        "NSFW"
+      ]
+    },
+    {
+      "id": "moonshotai/kimi-k2.5",
+      "name": "MoonshotAI: Kimi K2.5",
+      "source": "openrouter",
+      "context": 262144,
+      "description": "Kimi K2.5 is Moonshot AI's native multimodal model, delivering state-of-the-art visual coding capability and a self-directed agent swarm paradigm. Built on Kimi K2 with continued pretraining over approximately 15T mixed...",
+      "labels": [
+        "$$"
+      ]
+    },
+    {
+      "id": "x-ai/grok-4.3",
+      "name": "xAI: Grok 4.3",
+      "source": "openrouter",
+      "context": "1000000",
+      "description": "Grok 4.3 is a reasoning model from xAI. It accepts text and image inputs with text output, and is suited for agentic workflows, instruction-following tasks, and applications requiring high factual...",
+      "labels": [
+        "$$",
+        "NSFW"
+      ]
+    },
+    {
+      "id": "mistralai/mistral-nemo",
+      "name": "Mistral: Mistral Nemo",
+      "source": "openrouter",
+      "context": 131072,
+      "description": "A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA. The model is multilingual, supporting English, French, German, Spanish, Italian, Portuguese, Chinese, Japanese,...",
+      "labels": [
+        "CHEAP",
+        "NSFW?"
+      ]
+    },
+    {
+      "id": "aion-labs/aion-3.0-mini",
+      "name": "AionLabs: Aion-3.0-Mini",
+      "source": "openrouter",
+      "context": "131072",
+      "description": "Aion-3.0 Mini is a multi-model roleplaying and storytelling system from AionLabs, built on the DeepSeek family of models. It uses a collaborative generation process in which multiple specialized models each...",
+      "labels": [
+        "$",
+        "NSFW"
+      ]
+    },
+    {
+      "id": "gryphe/mythomax-l2-13b",
+      "name": "MythoMax 13B",
+      "source": "openrouter",
+      "context": 8192,
+      "description": "One of the highest performing and most popular fine-tunes of Llama 2 13B, with rich descriptions and roleplay. #merge",
+      "labels": [
+        "CHEAP",
+        "NSFW"
+      ]
+    },
+    {
+      "id": "inclusionai/ling-3.0-flash:free",
+      "name": "Ling-3.0-flash (free)",
+      "source": "openrouter",
+      "context": 262144,
+      "description": "*Ling-3.0-flash* is a *124B-parameter Mixture-of-Experts (MoE) model*, with approximately *5.1B parameters activated per token*. The model is designed with *token efficiency and production-scale agentic inference* as key priorities, enabling developers...",
+      "labels": [
+        "Free"
+      ]
+    }
+  ],
+  "ollama": [
+    {
+      "id": "llama3.2:3b",
+      "name": "Llama 3",
+      "source": "ollama",
+      "context": "",
+      "description": "",
+      "labels": [
+        "Test",
+        "Local"
+      ]
+    }
+  ]
+}

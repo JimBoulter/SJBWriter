@@ -1,0 +1,85 @@
+{
+  "prompts": [
+    {
+      "collapsed": true,
+      "id": "epbm",
+      "items": [
+        {
+          "filename": "epbm-1-premise.json",
+          "title": "EPBM 1 - Premise",
+          "type": "file"
+        },
+        {
+          "filename": "epbm-2-characters.json",
+          "title": "EPBM 2 - Characters",
+          "type": "file"
+        },
+        {
+          "filename": "epbm-3-outline.json",
+          "title": "EPBM 3 - Outline",
+          "type": "file"
+        },
+        {
+          "filename": "epbm-4-chapter-plan.json",
+          "title": "EPBM 4 - Chapter Plan",
+          "type": "file"
+        },
+        {
+          "filename": "epbm-5-chapter-draft.json",
+          "title": "EPBM 5 - Chapter Draft",
+          "type": "file"
+        },
+        {
+          "filename": "epbm-6-chapter-editing-plan.json",
+          "title": "EPBM 6 - Chapter Editing Plan",
+          "type": "file"
+        },
+        {
+          "filename": "epbm-7-chapter-final.json",
+          "title": "EPBM 7 - Chapter Final",
+          "type": "file"
+        },
+        {
+          "filename": "epbm-8-continuity-check.json",
+          "title": "EPBM 8 - Continuity Check",
+          "type": "file"
+        },
+        {
+          "filename": "epbm-9-review-refinement.json",
+          "title": "EPBM 9 - Review & Refinement",
+          "type": "file"
+        },
+        {
+          "filename": "plan.json",
+          "title": "7D Plan - Sample Prompt",
+          "type": "file",
+          "wordCount": 210
+        }
+      ],
+      "title": "EPBM",
+      "type": "folder"
+    }
+  ],
+  "system": [
+    {
+      "filename": "always-on-instructions-from-cv-to-be-edited.json",
+      "title": "Always On Instructions",
+      "type": "file",
+      "wordCount": 1951
+    },
+    {
+      "filename": "em-dashes.json",
+      "title": "Em dashes",
+      "type": "file"
+    }
+  ],
+  "last_opened": {
+    "section": "system",
+    "filename": "ai-program-instructions-and-tasks.json"
+  },
+  "last_opened_global": {
+    "project": "sample-project",
+    "section": "background",
+    "filename": "setup.json"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "current_project": "sample-project",
+  "recent_projects": [
+    "sample-project",
+    "hidden-personal-prompts-and-system",
+    "songs",
+    "premises-to-explore",
+    "original"
+  ],
+  "showWritingCounts": true,
+  "showBackgroundCounts": true,
+  "showPromptCounts": false,
+  "showSystemCounts": false,
+  "showFolderTotals": true,
+  "editor_font": "Arial",
+  "editor_font_size": "17px"
+}

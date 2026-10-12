@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Installation and manual documents
+*.pages
+
+# Local API configuration / secrets
+Global/config.json
+
+# Personal projects
+Projects/*
+!Projects/sample-project/
+!Projects/sample-project/**
+
+# Python cache
+__pycache__/
+
+Projects/sample-project/.DS_Store

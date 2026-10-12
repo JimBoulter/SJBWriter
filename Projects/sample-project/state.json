@@ -1,0 +1,57 @@
+{
+  "background": [
+    {
+      "collapsed": false,
+      "id": "1-quick-setup",
+      "items": [
+        {
+          "type": "file",
+          "filename": "setup.json",
+          "title": "Setup",
+          "wordCount": 429
+        }
+      ],
+      "title": "1 - Quick Setup",
+      "type": "folder"
+    },
+    {
+      "collapsed": false,
+      "id": "3-more-instructions",
+      "items": [],
+      "title": "3 - More Instructions",
+      "type": "folder"
+    }
+  ],
+  "writing": [
+    {
+      "type": "folder",
+      "id": "2-getting-started",
+      "title": "2 - Getting Started",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "file",
+          "filename": "2-1-look-around.json",
+          "title": "2.1 - Look Around",
+          "wordCount": 10
+        },
+        {
+          "type": "file",
+          "filename": "2-2-create-your-first-writing-file.json",
+          "title": "2.2 \u2013 Create Your First Writing File",
+          "wordCount": 14
+        },
+        {
+          "type": "file",
+          "filename": "2-3-the-gear-menu.json",
+          "title": "2.3 \u2013 The Gear Menu",
+          "wordCount": 14
+        }
+      ]
+    }
+  ],
+  "last_opened_project": {
+    "section": "background",
+    "filename": "setup.json"
+  }
+}
