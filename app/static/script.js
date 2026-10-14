@@ -670,6 +670,19 @@ function populateModelEditor(model) {
     "editModelSource"
   ).value = model.source || "openrouter";
 
+  const deleteButton =
+    document.getElementById("deleteModelBtn");
+
+  const isOllama = model.source === "ollama";
+
+  deleteButton.disabled = isOllama;
+  deleteButton.title = isOllama
+    ? "Ollama models are managed outside SJB Writer. Uninstall the model through Ollama to reclaim disk space. SJB Writer retains its catalog information for future reinstalls."
+    : "Delete this model from SJB Writer.";
+
+  deleteButton.style.opacity = isOllama ? "0.5" : "";
+  deleteButton.style.cursor = isOllama ? "not-allowed" : "";
+
   document.getElementById(
     "editModelContext"
   ).value = model.context || "";
@@ -883,13 +896,17 @@ async function verifyModelId() {
 }
 
 
-async function deleteSelectedModel() {
 
+async function deleteSelectedModel() {
   if (!selectedModelId) {
     return;
   }
 
   const model = getModelById(selectedModelId);
+
+  if (model?.source === "ollama") {
+    return;
+  }
 
   const confirmed =
     confirm(
@@ -908,6 +925,7 @@ async function deleteSelectedModel() {
     .getElementById("modelEditor")
     .classList.add("hidden");
 }
+
 
 
 async function deleteModel(modelId) {

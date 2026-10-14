@@ -88,6 +88,16 @@
       ]
     },
     {
+      "id": "openrouter/owl-alpha",
+      "name": "Owl Alpha Free",
+      "source": "openrouter",
+      "context": 1048756,
+      "description": "Owl Alpha is a high-performance foundation model designed for agentic workloads. Natively supports tool use, and long-context tasks, with strong performance in code generation, automated workflows, and complex instruction execution....",
+      "labels": [
+        "Free"
+      ]
+    },
+    {
       "id": "openai/gpt-4o-mini",
       "label": "GPT-4o Mini",
       "group": "OpenAI",
@@ -98,16 +108,6 @@
       "labels": [
         "Writing",
         "Fast"
-      ]
-    },
-    {
-      "id": "openrouter/owl-alpha",
-      "name": "Owl Alpha Free",
-      "source": "openrouter",
-      "context": 1048756,
-      "description": "Owl Alpha is a high-performance foundation model designed for agentic workloads. Natively supports tool use, and long-context tasks, with strong performance in code generation, automated workflows, and complex instruction execution....",
-      "labels": [
-        "Free"
       ]
     },
     {
@@ -212,11 +212,51 @@
       "name": "Llama 3",
       "source": "ollama",
       "context": "",
-      "description": "",
+      "description": "No NSFW, but a solid local model",
       "labels": [
-        "Test",
-        "Local"
+        "Local",
+        "Prose"
       ]
+    },
+    {
+      "id": "R4C3R/gemma-3-12b-it-heretic:q5_k_m",
+      "name": "R4C3R/gemma-3-12b-it-heretic:q5_k_m",
+      "source": "ollama",
+      "context": 131072,
+      "description": "",
+      "labels": []
+    },
+    {
+      "id": "dolphin-mistral:7b",
+      "name": "dolphin-mistral:7b",
+      "source": "ollama",
+      "context": 32768,
+      "description": "",
+      "labels": []
+    },
+    {
+      "id": "llama2-uncensored:7b",
+      "name": "llama2-uncensored:7b",
+      "source": "ollama",
+      "context": 2048,
+      "description": "",
+      "labels": []
+    },
+    {
+      "id": "defyma85/gemma-4-E4B-it-ultra-uncensored-heretic-Q4_K_M_gguf:latest",
+      "name": "defyma85/gemma-4-E4B-it-ultra-uncensored-heretic-Q4_K_M_gguf:latest",
+      "source": "ollama",
+      "context": 131072,
+      "description": "",
+      "labels": []
+    },
+    {
+      "id": "richardyoung/qwen3.6-27b-abliterated:latest",
+      "name": "richardyoung/qwen3.6-27b-abliterated:latest",
+      "source": "ollama",
+      "context": 262144,
+      "description": "",
+      "labels": []
     }
   ]
 }

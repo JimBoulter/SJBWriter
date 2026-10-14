@@ -575,54 +575,138 @@ def api_generate():
 
 
 
+
 @app.route('/models', methods=['GET'])
 def api_get_models():
     model_file = os.path.join(GLOBAL_DIR, "modelList.json")
+    order_file = os.path.join(GLOBAL_DIR, "ollama_order.json")
 
     if not os.path.exists(model_file):
-        return jsonify({"openrouter": []})
+        return jsonify({"openrouter": [], "ollama": []})
 
     with open(model_file, "r") as f:
         data = json.load(f)
+
+    saved_ollama_models = data.setdefault("ollama", [])
+    saved_by_id = {
+        model["id"]: model
+        for model in saved_ollama_models
+        if model.get("id")
+    }
+
+    available_ollama_models = []
 
     try:
         response = requests.get(
             "http://localhost:11434/api/tags",
             timeout=5
         )
-
+        response.raise_for_status()
         ollama_data = response.json()
 
-        ollama_models = data.setdefault("ollama", [])
-
-        existing_ids = {
-            model["id"]
-            for model in ollama_models
-        }
+        catalog_changed = False
 
         for discovered in ollama_data.get("models", []):
             model_id = discovered.get("name")
 
-            if not model_id or model_id in existing_ids:
+            if not model_id:
                 continue
 
-            ollama_models.append({
-                "id": model_id,
-                "name": model_id,
-                "source": "ollama",
-                "context": (
-                    discovered
-                    .get("details", {})
-                    .get("context_length", 0)
-                ),
-                "description": "",
-                "labels": []
-            })
+            model = saved_by_id.get(model_id)
+
+            if model is None:
+                model = {
+                    "id": model_id,
+                    "name": model_id,
+                    "source": "ollama",
+                    "context": (
+                        discovered.get("details", {})
+                        .get("context_length", 0)
+                    ),
+                    "description": "",
+                    "labels": []
+                }
+
+                saved_ollama_models.append(model)
+                saved_by_id[model_id] = model
+                catalog_changed = True
+
+            available_ollama_models.append(model)
+
+        if catalog_changed:
+            save_model_list(data)
+
+        catalog_ids = [
+            model["id"]
+            for model in saved_ollama_models
+            if model.get("id")
+        ]
+        available_ids = [
+            model["id"]
+            for model in available_ollama_models
+        ]
+
+        order_changed = False
+
+        if os.path.exists(order_file):
+            with open(order_file, "r") as f:
+                saved_order = json.load(f)
+
+            if not isinstance(saved_order, list):
+                saved_order = []
+                order_changed = True
+
+            # Newly installed models go to the top of this local list.
+            new_installed_ids = [
+                model_id
+                for model_id in available_ids
+                if model_id not in saved_order
+            ]
+
+            if new_installed_ids:
+                saved_order = new_installed_ids + saved_order
+                order_changed = True
+
+            # Keep catalog entries so reinstalling a model can restore
+            # its previous position.
+            for model_id in catalog_ids:
+                if model_id not in saved_order:
+                    saved_order.append(model_id)
+                    order_changed = True
+
+        else:
+            # On first initialization, use Ollama's current inventory
+            # order, followed by any known models that are not installed.
+            saved_order = available_ids + [
+                model_id
+                for model_id in catalog_ids
+                if model_id not in available_ids
+            ]
+            order_changed = True
+
+        if order_changed:
+            with open(order_file, "w") as f:
+                json.dump(saved_order, f, indent=2)
+
+        order_positions = {
+            model_id: index
+            for index, model_id in enumerate(saved_order)
+        }
+
+        available_ollama_models.sort(
+            key=lambda model: order_positions.get(
+                model["id"],
+                len(order_positions)
+            )
+        )
 
     except Exception as e:
         print(f"Ollama discovery failed: {e}")
 
+    data["ollama"] = available_ollama_models
     return jsonify(data)
+
+
 
 @app.route('/add_model', methods=['POST'])
 def api_add_model():
@@ -753,64 +837,142 @@ def api_delete_model():
         "status": "deleted"
     })
 
+
 @app.route('/move_model', methods=['POST'])
 def api_move_model():
-
-    data = request.json
+    data = request.json or {}
 
     model_id = data.get("id")
     direction = data.get("direction")
 
     if model_id is None or direction is None:
-        return jsonify({
-            "error": "Missing data"
-        }), 400
+        return jsonify({"error": "Missing data"}), 400
+
+    try:
+        direction = int(direction)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid direction"}), 400
+
+    if direction not in (-1, 1):
+        return jsonify({"error": "Invalid direction"}), 400
 
     models = load_model_list()
-
     target_source = None
-    existing = None
 
     for source, source_models in models.items():
-
         if any(
-            m.get("id") == model_id
-            for m in source_models
+            model.get("id") == model_id
+            for model in source_models
         ):
             target_source = source
-            existing = source_models
             break
 
-    if existing is None:
-        return jsonify({
-            "error": "Model not found"
-        }), 404
+    if target_source is None:
+        return jsonify({"error": "Model not found"}), 404
 
-    index = next(
-        (
-            i for i, m in enumerate(existing)
-            if m.get("id") == model_id
-        ),
-        None
-    )
+    if target_source == "ollama":
+        order_file = os.path.join(
+            GLOBAL_DIR,
+            "ollama_order.json"
+        )
 
-    new_index = index + int(direction)
+        try:
+            response = requests.get(
+                "http://localhost:11434/api/tags",
+                timeout=5
+            )
+            response.raise_for_status()
 
-    if new_index < 0 or new_index >= len(existing):
-        return jsonify({
-            "error": "Invalid move"
-        }), 400
+            installed_ids = [
+                model.get("name")
+                for model in response.json().get("models", [])
+                if model.get("name")
+            ]
 
-    existing[index], existing[new_index] = (
-        existing[new_index],
-        existing[index]
-    )
+        except Exception as e:
+            print(f"Ollama discovery failed: {e}")
+            return jsonify({
+                "error": "Ollama is unavailable"
+            }), 503
 
-    save_model_list(models)
+        if model_id not in installed_ids:
+            return jsonify({"error": "Model not installed"}), 404
 
-    return jsonify({
-        "status": "moved"
-    })
+        if os.path.exists(order_file):
+            with open(order_file, "r") as f:
+                saved_order = json.load(f)
+        else:
+            saved_order = [
+                model.get("id")
+                for model in models.get("ollama", [])
+                if model.get("id")
+            ]
+
+        # Retain saved positions for models that are currently uninstalled.
+        for saved_model in models.get("ollama", []):
+            saved_id = saved_model.get("id")
+            if saved_id and saved_id not in saved_order:
+                saved_order.append(saved_id)
+
+        # Newly installed models appear at the top of the local order.
+        new_ids = [
+            model_id
+            for model_id in installed_ids
+            if model_id not in saved_order
+        ]
+        saved_order = new_ids + saved_order
+
+        visible_order = [
+            model_id
+            for model_id in saved_order
+            if model_id in installed_ids
+        ]
+
+        index = visible_order.index(model_id)
+        new_index = index + direction
+
+        if new_index < 0 or new_index >= len(visible_order):
+            return jsonify({"error": "Invalid move"}), 400
+
+        other_id = visible_order[new_index]
+        first_position = saved_order.index(model_id)
+        second_position = saved_order.index(other_id)
+
+        saved_order[first_position], saved_order[second_position] = (
+            saved_order[second_position],
+            saved_order[first_position]
+        )
+
+        with open(order_file, "w") as f:
+            json.dump(saved_order, f, indent=2)
+
+    else:
+        existing = models.get(target_source, [])
+
+        index = next(
+            (
+                i for i, model in enumerate(existing)
+                if model.get("id") == model_id
+            ),
+            None
+        )
+
+        if index is None:
+            return jsonify({"error": "Model not found"}), 404
+
+        new_index = index + direction
+
+        if new_index < 0 or new_index >= len(existing):
+            return jsonify({"error": "Invalid move"}), 400
+
+        existing[index], existing[new_index] = (
+            existing[new_index],
+            existing[index]
+        )
+
+        save_model_list(models)
+
+    return jsonify({"status": "moved"})
 
 
 @app.route('/api_key_status', methods=['GET'])
