@@ -1,12 +1,10 @@
 let fileCache = {}; // { "section/filename": content }
 
-
 function setTheme(mode) {
   document.body.classList.remove("dark", "crimson", "dark-stellar", "light-stellar");
   if (mode !== "light") {
     document.body.classList.add(mode);
   }
-  localStorage.setItem("theme", mode);
 }
 
 function previewTheme(mode) {
@@ -14,15 +12,15 @@ function previewTheme(mode) {
 }
 
 function loadTheme() {
-  const saved = localStorage.getItem("theme") || "light";
+  const saved = state.app_state.theme || "light";
   setTheme(saved);
-  const savedSize = localStorage.getItem('sjb_sidebar_font_size') || '13px';
+  const savedSize =
+    state.app_state.sidebarFontSize || "13px";
   applySidebarFontSize(savedSize);
 }
 
 function applySidebarFontSize(size) {
   document.documentElement.style.setProperty('--sidebar-font-size', size);
-  localStorage.setItem('sjb_sidebar_font_size', size);
 }
 
 
@@ -57,6 +55,9 @@ let followGeneration = true;
 let wakeLock = null;
 
 let currentAbortController = null;
+
+let savedModelName = "";
+let savedModelSource = "";
 
 
 function shouldShowCounts(sectionName) {
@@ -1048,125 +1049,125 @@ async function moveModelToPosition(
   renderModelDropdown();
 }
 
-async function openModelsPanel() {
-  activeModelLabelFilters = [];
-  document.getElementById("settingsMainView")
-    .classList.add("hidden");
-  document.getElementById("settingsModelsView")
-    .classList.remove("hidden");
-
-  const searchInput =
-    document.getElementById("modelSearchInput");
-
-  searchInput.value = modelSearchQuery;
-
-  searchInput.oninput = (e) => {
-
-    modelSearchQuery =
-      e.target.value.toLowerCase();
-    renderModelsManager();
-  };
-
-  await renderModelsManager();
-}
 
 function openVisualPanel() {
-  document.getElementById("settingsMainView").classList.add("hidden");
+  document.getElementById("settingsMainLayout").classList.add("hidden");
   document.getElementById("settingsVisualView").classList.remove("hidden");
   loadVisualSettingsIntoUI();
 }
 
 function closeVisualPanel() {
   document.getElementById("settingsVisualView").classList.add("hidden");
-  document.getElementById("settingsMainView").classList.remove("hidden");
+  document.getElementById("settingsMainLayout").classList.remove("hidden");
+}
+
+async function openModelsPanel() {
+  activeModelLabelFilters = [];
+  document.getElementById("settingsMainLayout")
+    .classList.add("hidden");
+  document.getElementById("settingsModelsView")
+    .classList.remove("hidden");
+
+  const searchInput =
+    document.getElementById("modelSearchInput");
+  searchInput.value = modelSearchQuery;
+  searchInput.oninput = (e) => {
+    modelSearchQuery = e.target.value.toLowerCase();
+    renderModelsManager();
+  };
+  await renderModelsManager();
 }
 
 function closeModelsPanel() {
-
   document.getElementById("settingsModelsView")
     .classList.add("hidden");
-
-  document.getElementById("settingsMainView")
+  document.getElementById("settingsMainLayout")
     .classList.remove("hidden");
 }
 
 
+
 function renderModelDropdown() {
+  const selects = [
+    document.getElementById("modelName"),
+    document.getElementById("footerModelName")
+  ].filter(Boolean);
 
-  const select =
-    document.getElementById("modelName");
-
-  select.innerHTML =
-    '<option value="">-- Select Model --</option>';
-
-  const models = [];
-
-  if (modelRegistry.ollama) {
-    models.push(...modelRegistry.ollama);
-  }
-
-  if (modelRegistry.openrouter) {
-    models.push(...modelRegistry.openrouter);
-  }
+  selects.forEach(select => {
+    select.innerHTML =
+      '<option value="">-- Select Model --</option>';
+  });
 
   function appendGroup(label, items) {
-
     if (!items.length) return;
 
-    const group =
-      document.createElement("optgroup");
+    selects.forEach(select => {
+      const group = document.createElement("optgroup");
+      group.label = label;
 
-    group.label = label;
+      for (const model of items) {
+        const option = document.createElement("option");
+        option.value = model.id;
+        option.textContent = model.name || model.id;
+        group.appendChild(option);
+      }
 
-    for (const model of items) {
-
-      const option =
-        document.createElement("option");
-
-      option.value = model.id;
-
-      option.textContent =
-        model.name || model.id;
-
-      group.appendChild(option);
-    }
-
-    select.appendChild(group);
+      select.appendChild(group);
+    });
   }
 
-  appendGroup(
-    "Ollama (Local)",
-    modelRegistry.ollama || []
-  );
+  appendGroup("Ollama (Local)", modelRegistry.ollama || []);
+  appendGroup("OpenRouter", modelRegistry.openrouter || []);
 
-  appendGroup(
-    "OpenRouter",
-    modelRegistry.openrouter || []
-  );
-
-  // Restore selected model
   if (settings.modelName) {
-    select.value = settings.modelName;
-    if (select.value !== settings.modelName) {
+    const modelExists = selects.some(select =>
+      Array.from(select.options).some(
+        option => option.value === settings.modelName
+      )
+    );
+
+    if (!modelExists) {
       settings.modelName = "";
+      settings.modelSource = "openrouter";
       localStorage.setItem(
         "sjb_settings",
         JSON.stringify(settings)
       );
     }
   }
+
+  selects.forEach(select => {
+    select.value = settings.modelName;
+
+    select.onchange = () => {
+      setActiveModel(select.value);
+    };
+  });
 }
 
+function setActiveModel(modelId) {
+  const selectedModel = getModelById(modelId);
+
+  settings.modelName = modelId;
+  settings.modelSource = selectedModel?.source || "openrouter";
+
+  updateActiveModelDisplay();
+  updateTokenMeter();
+}
 
 function updateActiveModelDisplay() {
-  const el = document.getElementById("activeModel");
+  const modelId = settings.modelName || "";
 
-  if (!settings.modelName) {
-    el.innerText = "Model: None";
-    return;
+  const el = document.getElementById("activeModel");
+  if (el) {
+    el.innerText = modelId ? `Model: ${modelId}` : "Model: None";
   }
 
-  el.innerText = `Model: ${settings.modelName}`;
+  const settingsSelect = document.getElementById("modelName");
+  const footerSelect = document.getElementById("footerModelName");
+
+  if (settingsSelect) settingsSelect.value = modelId;
+  if (footerSelect) footerSelect.value = modelId;
 }
 
 
@@ -1387,7 +1388,9 @@ function toggleProjectMenu(e) {
   }, 0);
 }
 
+
 function toggleProjectDropdown(e) {
+  e.stopPropagation();
 
   document.querySelectorAll('.file-menu').forEach(m => m.remove());
 
@@ -1395,77 +1398,143 @@ function toggleProjectDropdown(e) {
     document.getElementById("projectDropdown")
       .getBoundingClientRect();
 
-  const menu = document.createElement('div');
+  const menu = document.createElement("div");
+  menu.classList.add("file-menu", "project-menu");
 
-  menu.classList.add('file-menu');
+  const allProjects = projects || [];
+  const recentIds = recentProjects || [];
+  const showRecent = allProjects.length >= 7;
 
-  for (const project of projects) {
+  const projectMap = Object.fromEntries(
+    allProjects.map(project => [project.id, project])
+  );
 
-    const item = document.createElement('div');
+  const recent = showRecent
+    ? [...new Set(recentIds)]
+        .map(id => projectMap[id])
+        .filter(Boolean)
+        .slice(0, 5)
+    : [];
 
-    const projectName =
-      project.title || project.id || project;
+  const recentIdSet = new Set(
+    recent.map(project => project.id)
+  );
 
-    const projectId =
-      project.id || project;
+  const alphabetical = allProjects
+    .filter(project => !recentIdSet.has(project.id))
+    .sort((a, b) =>
+      (a.title || a.id).localeCompare(b.title || b.id)
+    );
 
-    item.textContent = projectName;
+  function addHeader(label) {
+    const header = document.createElement("div");
+    header.classList.add("project-menu-header");
+    header.textContent = label;
+    menu.appendChild(header);
+  }
 
-    if (projectId === currentProject) {
-      item.style.fontWeight = "bold";
+  function addProject(project) {
+    const item = document.createElement("div");
+    item.classList.add("project-menu-item");
+    item.textContent = project.title || project.id;
+
+    if (project.id === currentProject) {
+      item.classList.add("current");
     }
 
     item.onclick = async () => {
+      try {
+        if (isDirty) {
+          await saveCurrentFile();
+        }
 
-      // SAVE FIRST
-      if (isDirty) {
-        await saveCurrentFile();
+        const res = await fetch('/switch_project', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            project: project.id
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.status === "switched") {
+          currentProject = project.id;
+          await loadProjects();
+          loadSelections();
+          await loadAll();
+        } else {
+          alert(data.error || "Failed to switch project");
+        }
+      } catch (error) {
+        console.error("Project switch failed:", error);
+        alert("Failed to switch project.");
       }
 
-      const res = await fetch('/switch_project', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          project: projectId
-        })
-      });
-
-      const data = await res.json();
-
-      if (data.status === "switched") {
-
-        currentProject = projectId;
-
-        await loadProjects();
-
-        loadSelections();
-
-        await loadAll();
-
-      } else {
-
-        alert(data.error || "Failed to switch project");
-      }
-
-      menu.remove();
+      closeMenu();
     };
 
     menu.appendChild(item);
   }
 
+  if (recent.length > 0) {
+    addHeader("RECENT");
+
+    recent.forEach(addProject);
+
+    const divider = document.createElement("div");
+    divider.classList.add("project-menu-divider");
+    menu.appendChild(divider);
+  }
+
+  if (alphabetical.length > 0) {
+    addHeader("ALPHA");
+    alphabetical.forEach(addProject);
+  }
+
+  function closeMenu() {
+    menu.remove();
+    document.removeEventListener("click", handleOutsideClick);
+  }
+
+  function handleOutsideClick(event) {
+    if (!menu.contains(event.target)) {
+      closeMenu();
+    }
+  }
+
+  menu.addEventListener("click", event => {
+    event.stopPropagation();
+  });
+
   document.body.appendChild(menu);
 
-  menu.style.top = `${rect.bottom + 4}px`;
-  menu.style.left = `${rect.left}px`;
+  const gap = 8;
+  const below = window.innerHeight - rect.bottom - gap;
+  const above = rect.top - gap;
+
+  menu.style.left = `${Math.max(
+    8,
+    Math.min(rect.left, window.innerWidth - menu.offsetWidth - 8)
+  )}px`;
+
+  if (menu.scrollHeight > below && above > below) {
+    menu.style.maxHeight = `${Math.max(80, above)}px`;
+    menu.style.top = "auto";
+    menu.style.bottom = `${window.innerHeight - rect.top + 4}px`;
+  } else {
+    menu.style.top = `${rect.bottom + 4}px`;
+    menu.style.bottom = "auto";
+    menu.style.maxHeight = `${Math.max(80, below)}px`;
+  }
 
   setTimeout(() => {
-    document.addEventListener('click', () => {
-      menu.remove();
-    }, { once: true });
+    document.addEventListener("click", handleOutsideClick);
   }, 0);
 }
+
 
 
 editor.addEventListener("input", () => {
@@ -2072,6 +2141,7 @@ async function loadProjects() {
 }
 
 
+
 function renderProjectList(data) {
   const container =
     document.getElementById("projectsList");
@@ -2080,6 +2150,7 @@ function renderProjectList(data) {
 
   const allProjects = data.projects || [];
   const recentIds = data.recent || [];
+  const showRecent = allProjects.length >= 7;
 
   // Build lookup map
   const projectMap = {};
@@ -2094,47 +2165,55 @@ function renderProjectList(data) {
   document.getElementById("currentProjectLabel").innerText =
     `Project: ${currentMeta?.title || currentProject}`;
 
-  // Build recent project objects
-  const recentProjects = recentIds
-    .map(id => projectMap[id])
-    .filter(Boolean);
+  // Build recent project objects, ignoring stale IDs
+  const recentProjects = showRecent
+    ? [...new Set(recentIds)]
+        .map(id => projectMap[id])
+        .filter(Boolean)
+        .slice(0, 5)
+    : [];
 
-  // Remaining alpha list
-  const remaining = allProjects.filter(
-    p => !recentIds.includes(p.id)
+  const recentProjectIds = new Set(
+    recentProjects.map(project => project.id)
   );
+
+  // Remaining projects, sorted alphabetically by title
+  const remaining = allProjects
+    .filter(project => !recentProjectIds.has(project.id))
+    .sort((a, b) =>
+      (a.title || a.id).localeCompare(b.title || b.id)
+    );
 
   // ---------- RECENT ----------
   if (recentProjects.length > 0) {
-
     const recentHeader = document.createElement("div");
     recentHeader.classList.add("project-header");
-    recentHeader.textContent = "Recent";
+    recentHeader.textContent = "RECENT";
     container.appendChild(recentHeader);
 
     for (const project of recentProjects) {
-      container.appendChild(
-        createProjectRow(project)
-      );
+      container.appendChild(createProjectRow(project));
     }
+
+    // Divider between Recent and Alpha
+    const divider = document.createElement("div");
+    divider.classList.add("project-section-divider");
+    container.appendChild(divider);
   }
 
-  // ---------- ALL PROJECTS ----------
+  // ---------- ALPHA ----------
   if (remaining.length > 0) {
-
     const allHeader = document.createElement("div");
     allHeader.classList.add("project-header");
-    allHeader.textContent = "All Projects";
-
+    allHeader.textContent = "ALPHA";
     container.appendChild(allHeader);
 
     for (const project of remaining) {
-      container.appendChild(
-        createProjectRow(project)
-      );
+      container.appendChild(createProjectRow(project));
     }
   }
 }
+
 
 function createProjectRow(project) {
 
@@ -3471,28 +3550,27 @@ let settings = {
 let modelRegistry = {};
 
 async function openSettings() {
+  savedModelName = settings.modelName;
+  savedModelSource = settings.modelSource;
   loadSettingsIntoUI();
   await loadApiKeyStatus();
   await fetchModels();
   document.getElementById("settingsModal").classList.remove("hidden");
 }
 
+function closeSettings(restoreModel = false) {
+  if (restoreModel) {
+    settings.modelName = savedModelName;
+    settings.modelSource = savedModelSource;
+  }
 
-function closeSettings() {
+  document.getElementById("modelName").value =
+    settings.modelName;
+
+  updateActiveModelDisplay();
+  updateTokenMeter();
+
   document.getElementById("settingsModal").classList.add("hidden");
-}
-
-
-
-function closeModelsPanel() {
-
-  document
-    .getElementById("settingsModelsView")
-    .classList.add("hidden");
-
-  document
-    .getElementById("settingsMainView")
-    .classList.remove("hidden");
 }
 
 
@@ -3536,13 +3614,20 @@ async function saveSettings() {
     });
   }
   updateActiveModelDisplay();
+  await updateTokenMeter();
   closeSettings();
 }
 
 async function saveVisualSettings() {
   const theme = document.getElementById("themeSelect").value;
+  const sidebarFontSize =
+    document.getElementById("sidebarFontSize").value;
+
   setTheme(theme);
-  applySidebarFontSize(document.getElementById('sidebarFontSize').value);
+  applySidebarFontSize(sidebarFontSize);
+
+  state.app_state.theme = theme;
+  state.app_state.sidebarFontSize = sidebarFontSize;
   state.app_state.showWritingCounts =
    document.getElementById("showWritingCounts").checked;
   state.app_state.showBackgroundCounts =
@@ -3569,7 +3654,9 @@ async function saveVisualSettings() {
       showSystemCounts:
         state.app_state.showSystemCounts,
       showFolderTotals:
-        state.app_state.showFolderTotals
+        state.app_state.showFolderTotals,
+      theme: state.app_state.theme,
+      sidebarFontSize: state.app_state.sidebarFontSize
     })
   });
 
@@ -3588,7 +3675,6 @@ function loadSettings() {
 
 function loadSettingsIntoUI() {
   document.getElementById("modelName").value = settings.modelName;
-
   document.getElementById("showWritingCounts").checked =
     state.app_state.showWritingCounts;
   document.getElementById("showBackgroundCounts").checked =
@@ -3599,13 +3685,17 @@ function loadSettingsIntoUI() {
     state.app_state.showSystemCounts;
   document.getElementById("showFolderTotals").checked =
     state.app_state.showFolderTotals;
+  document.getElementById("themeSelect").value =
+    state.app_state.theme || "light";
+  document.getElementById("sidebarFontSize").value =
+    state.app_state.sidebarFontSize || "13px";
 }
 
 function loadVisualSettingsIntoUI() {
   document.getElementById("themeSelect").value =
-    localStorage.getItem("theme") || "light";
-  document.getElementById('sidebarFontSize').value =
-    localStorage.getItem('sjb_sidebar_font_size') || '13px';
+    state.app_state.theme || "light";
+  document.getElementById("sidebarFontSize").value =
+    state.app_state.sidebarFontSize || "13px";
 }
 
 
@@ -3764,10 +3854,11 @@ window.addEventListener("beforeunload", (e) => {
 
 
 window.onload = async () => {
-  loadTheme();
   loadSettings();
+  await fetchModels();
   await loadProjects();
   loadSelections();
   await loadAll();
+  loadTheme();
   updateUndoButton();
 };

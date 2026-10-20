@@ -136,19 +136,23 @@
 
     <!-- Controls + Status -->
     <div class="controls">
-      <div style="display:flex; gap:12px; align-items:center;">
+      
+      <div class="footer-status">
         <div id="tokenMeter">🟢 0 / 128000</div>
         <div id="wordCount">0 words</div>
-        <div id="activeModel" style="font-size: 12px; opacity: 0.7;">
-          Model: None
-        </div>
       </div>
 
-      <button type="button" onclick="generate()">Generate</button>
-      <button type="button" id="stopGenerateBtn" onclick="stopGeneration()" disabled>⏹ Stop</button>
-      <button type="button" id="undoGenerateBtn" onclick="undoLastGeneration()" disabled>↩ Undo</button>
-      <button type="button" onclick="saveCurrentFile()">Save</button>
-      <button type="button" onclick="clearPrompt()">ClearPrompt</button>
+      <div class="footer-actions">
+        <select id="footerModelName" aria-label="Active model">
+          <option value="">-- Select Model --</option>
+        </select>
+
+        <button type="button" onclick="generate()">Generate</button>
+        <button type="button" id="stopGenerateBtn" onclick="stopGeneration()" disabled>⏹ Stop</button>
+        <button type="button" id="undoGenerateBtn" onclick="undoLastGeneration()" disabled>↩ Undo</button>
+        <button type="button" onclick="saveCurrentFile()">Save</button>
+        <button type="button" onclick="clearPrompt()">ClearPrompt</button>
+      </div>
 
       <div id="loadingIndicator" style="display:none;">⏳ Thinking...</div>
     </div>
@@ -163,42 +167,66 @@
 
   <div class="modal-content">
 
-    <!-- ===================== MAIN SETTINGS VIEW ===================== -->
+
+  <!-- ===================== MAIN SETTINGS VIEW ===================== -->
+  <div id="settingsMainLayout">
+
     <div id="settingsMainView">
       <h2>Settings</h2>
 
-      <div class="settings-section">
-        <div class="models-header">
-          <label>Model</label>
-          <button type="button" onclick="openModelsPanel()">
-            Manage Models
-          </button>
-        </div>
-        <select id="modelName">
-          <option value="">-- Select Model --</option>
-        </select>
-      </div>
+      <div id="settingsControls">
 
-      <div class="settings-section">
-        <div class="models-header">
-          <label>Visual Layout</label>
-          <button type="button" onclick="openVisualPanel()">
-            Manage Visual
-          </button>
+        <!-- Model Selection section -->
+        <div class="settings-section">
+          <div class="models-header">
+            <h2>Model Selection</h2>
+            <button type="button" onclick="openModelsPanel()">
+              Manage Models
+            </button>
+          </div>
+          <select id="modelName">
+            <option value="">-- Select Model --</option>
+          </select>
         </div>
-      </div>
 
-      <div class="settings-section">
-        <label>API Key (OpenRouter)</label>
-        <input id="apiKey" type="password" placeholder="sk-..." />
-        <div id="apiKeyStatus" class="settings-note"></div>
+        <!-- Visual Layout section -->
+        <div class="settings-section">
+          <div class="models-header">
+            <h2>Visual Layout</h2>
+            <button type="button" onclick="openVisualPanel()">
+              Manage Visual
+            </button>
+          </div>
+        </div>
+
+        <!-- OpenRouter API Key section -->
+        <div class="settings-section">
+          <h2>OpenRouter API Key</h2>
+          <input id="apiKey" type="password" placeholder="sk-..." />
+          <div id="apiKeyStatus" class="settings-note"></div>
+        </div>
       </div>
 
       <div class="modal-actions">
         <button onclick="saveSettings()">Save</button>
-        <button onclick="closeSettings()">Cancel</button>
+        <button onclick="closeSettings(true)">Cancel</button>
       </div>
     </div>
+
+    <!-- ABOUT -->
+    <div id="settingsAboutView">
+      <img
+        src="/static/apple-touch-icon.png"
+        alt="SJB Writer"
+        class="about-app-icon"
+      />
+      <h3>SJB Writer</h3>
+      <p id="aboutVersion">Version 0.9.0</p>
+      <p class="about-description">
+        A local-first writing environment.
+      </p>
+    </div>
+  </div>
 
     <!-- ===================== VISUAL LAYOUT PANEL ===================== -->
     <div id="settingsVisualView" class="hidden">

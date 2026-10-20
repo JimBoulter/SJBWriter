@@ -230,7 +230,7 @@
       "id": "dolphin-mistral:7b",
       "name": "dolphin-mistral:7b",
       "source": "ollama",
-      "context": 32768,
+      "context": "32768",
       "description": "",
       "labels": []
     },
