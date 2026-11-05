@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Models and settings · SJB Writer Help</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../branding/favicon-32x32.png">
+  <link rel="stylesheet" href="help.css">
+  <script src="help.js" defer></script>
+</head>
+<body>
+<header class="help-top">
+  <a class="help-brand" href="index.html"><img src="../branding/icon-192.png" alt="">SJB Writer Help</a>
+  <a class="help-back" id="helpBack" href="/">Back to the app</a>
+</header>
+<div class="help-layout">
+  <nav class="help-nav" aria-label="Help pages">
+    <h2>Help</h2>
+    <ol>
+      <li><a href="index.html">Start here</a></li>
+      <li><a href="writing.html">Writing</a></li>
+      <li><a href="organizing.html">Projects and the sidebar</a></li>
+      <li><a href="ai.html">Working with AI</a></li>
+      <li><a href="models.html" aria-current="page">Models and settings</a></li>
+      <li><a href="safety.html">Keeping your work safe</a></li>
+      <li><a href="files.html">Your files</a></li>
+      <li><a href="look.html">Look and layout</a></li>
+    </ol>
+  </nav>
+  <main class="help-main">
+<h1>Models and settings</h1>
+<p class="help-lead">Connect an AI model, and find every setting in one window.</p>
+<nav class="help-toc" aria-label="On this page">
+  <strong>On this page</strong>
+  <ul>
+    <li><a href="#settings">The Settings window</a></li>
+    <li><a href="#openrouter">Online models with OpenRouter</a></li>
+    <li><a href="#ollama">Models on your Mac with Ollama</a></li>
+    <li><a href="#manage">Manage Models</a></li>
+  </ul>
+</nav>
+
+<h2 id="settings">The Settings window</h2>
+<p>Click the gear in the top bar.</p>
+<figure class="small">
+  <img src="assets/settings.png" alt="The Settings window" loading="lazy">
+</figure>
+<ul>
+<li><strong>Model Selection</strong>: the model to use, and <em>Manage Models</em>.</li>
+<li><strong>AI features</strong>: turn all AI on or off.</li>
+<li><strong>Books folder</strong>: where your books are saved. See <a href="files.html#folder">Your files</a>.</li>
+<li><strong>OpenRouter API Key</strong>: your key for online models.</li>
+</ul>
+<p>Click <strong>Save</strong> to keep model, AI, and key changes. The Books folder changes at once, after it asks you.</p>
+
+<h2 id="openrouter">Online models with OpenRouter</h2>
+<ol>
+<li>Create an account at <a href="https://openrouter.ai">openrouter.ai</a> and add credit if you want paid models. Many models are free.</li>
+<li>Create an API key and copy it.</li>
+<li>Paste it into Settings → <strong>OpenRouter API Key</strong> and click Save.</li>
+</ol>
+<p>The key stays on your computer, in <code>Global/config.json</code>.</p>
+
+<h2 id="ollama">Models on your Mac with Ollama</h2>
+<p>Install <a href="https://ollama.com">Ollama</a> and download a model. SJB Writer finds the models on your Mac by itself. They are free, and your text never leaves your computer. Web search is not available for them.</p>
+
+<h2 id="manage">Manage Models</h2>
+<p>Settings → <strong>Manage Models</strong> keeps your list of models tidy.</p>
+<figure class="small">
+  <img src="assets/manage-models.png" alt="The Manage Models window with one model selected" loading="lazy">
+</figure>
+<ul>
+<li><strong>+ Add Model</strong>: paste a Model ID from OpenRouter (for example <code>openai/gpt-4.1</code>) and click <em>Verify</em> to fill in its details.</li>
+<li>For each model: a display name, the source, the context window, labels, and a description.</li>
+<li>Click a label at the top to show only those models, or search by name.</li>
+<li><strong>Check OpenRouter</strong> marks models that OpenRouter has removed or will remove soon, with the date.</li>
+</ul>
+
+<nav class="help-pager" aria-label="More help">
+  <a href="ai.html">← Working with AI</a>
+  <a href="safety.html">Keeping your work safe →</a>
+</nav>
+  </main>
+</div>
+</body>
+</html>

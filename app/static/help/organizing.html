@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects and the sidebar · SJB Writer Help</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../branding/favicon-32x32.png">
+  <link rel="stylesheet" href="help.css">
+  <script src="help.js" defer></script>
+</head>
+<body>
+<header class="help-top">
+  <a class="help-brand" href="index.html"><img src="../branding/icon-192.png" alt="">SJB Writer Help</a>
+  <a class="help-back" id="helpBack" href="/">Back to the app</a>
+</header>
+<div class="help-layout">
+  <nav class="help-nav" aria-label="Help pages">
+    <h2>Help</h2>
+    <ol>
+      <li><a href="index.html">Start here</a></li>
+      <li><a href="writing.html">Writing</a></li>
+      <li><a href="organizing.html" aria-current="page">Projects and the sidebar</a></li>
+      <li><a href="ai.html">Working with AI</a></li>
+      <li><a href="models.html">Models and settings</a></li>
+      <li><a href="safety.html">Keeping your work safe</a></li>
+      <li><a href="files.html">Your files</a></li>
+      <li><a href="look.html">Look and layout</a></li>
+    </ol>
+  </nav>
+  <main class="help-main">
+<h1>Projects and the sidebar</h1>
+<p class="help-lead">Keep each book in its own project, and its notes and chapters in order.</p>
+<nav class="help-toc" aria-label="On this page">
+  <strong>On this page</strong>
+  <ul>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#sections">Background and Writing</a></li>
+    <li><a href="#ticks">Tick boxes</a></li>
+    <li><a href="#moving">Moving and ordering</a></li>
+    <li><a href="#menus">Document and folder menus</a></li>
+    <li><a href="#search">Search the whole project</a></li>
+    <li><a href="#questions">Names and questions</a></li>
+  </ul>
+</nav>
+
+<h2 id="projects">Projects</h2>
+<p>A <strong>project</strong> is one book: its notes and its chapters. Click the project name at the top of the sidebar to switch to another project.</p>
+<figure class="small">
+  <img src="assets/project-menu.png" alt="The project menu" loading="lazy">
+  <figcaption>The project <kbd>⋯</kbd> menu.</figcaption>
+</figure>
+<ul>
+<li><strong>Create, Rename, Duplicate Project.</strong> Duplicate copies the whole project, without its history and trash.</li>
+<li><strong>Delete Project.</strong> The project moves to the <a href="safety.html#trash">Trash</a>. You can restore it.</li>
+<li><strong>Search and replace…</strong> searches every document at once. See <a href="#search">Search the whole project</a>.</li>
+<li><strong>Import…</strong> brings in Markdown, text, and Word files, or a whole folder. See <a href="files.html#import">Import</a>.</li>
+<li><strong>Export manuscript…</strong> turns the Writing section into one Word or Markdown file. See <a href="files.html#export">Export</a>.</li>
+<li><strong>Trash…</strong> shows deleted documents and projects.</li>
+</ul>
+
+<h2 id="sections">Background and Writing</h2>
+<figure class="narrow">
+  <img src="assets/sidebar.png" alt="The sidebar with Background and Writing" loading="lazy">
+</figure>
+<ul>
+<li><strong>Background</strong> holds your notes: characters, setting, research, outlines.</li>
+<li><strong>Writing</strong> holds the book itself: chapters and scenes.</li>
+</ul>
+<p>Next to each section label:</p>
+<ul>
+<li>the <strong>page with a plus</strong> makes a new document,</li>
+<li>the <strong>folder with a plus</strong> makes a new folder,</li>
+<li>the <strong>arrows</strong> on the right change the order: your own order, A–Z, or Z–A.</li>
+</ul>
+<p>Click a section label to fold it away. The numbers in brackets are word counts; a folder shows the total of what it holds.</p>
+<p>Your rules and saved instructions (System and Prompts) are not in the sidebar. They are in the <a href="ai.html#panel">AI setup panel</a>, and they are shared by all projects.</p>
+
+<h2 id="ticks">Tick boxes</h2>
+<p>A tick next to a document means: <em>send this to the AI as background</em>. Tick a folder to tick everything inside it. Ticks do nothing else, so you can leave them on while you write. See <a href="ai.html#what">What the AI sees</a>.</p>
+
+<h2 id="moving">Moving and ordering</h2>
+<ul>
+<li><strong>Drag</strong> a document up or down to change its place.</li>
+<li><strong>Drag</strong> it onto a folder to put it inside.</li>
+<li><strong>Drag</strong> it into the other section to move it between Background and Writing.</li>
+</ul>
+<p>Drag the sidebar's edge to make it wider or narrower; double-click the edge to reset it. Hide the sidebar with the sidebar button or <kbd>⌘</kbd><kbd>\</kbd>.</p>
+
+<h2 id="menus">Document and folder menus</h2>
+<p>Hover over a document and click <kbd>⋯</kbd>:</p>
+<figure class="small">
+  <img src="assets/doc-menu.png" alt="The document menu" loading="lazy">
+</figure>
+<ul>
+<li><strong>Rename</strong> changes the title and the file name.</li>
+<li><strong>Duplicate</strong> makes a copy next to it.</li>
+<li><strong>Version history…</strong> shows earlier versions. See <a href="safety.html#history">Version history</a>.</li>
+<li><strong>Export as Markdown / Export as Word</strong> saves this one document as a file.</li>
+<li><strong>Delete</strong> moves it to the <a href="safety.html#trash">Trash</a>.</li>
+</ul>
+<p>A folder's <kbd>⋯</kbd> menu has <strong>Add File</strong>, <strong>Rename Folder</strong>, <strong>Duplicate Folder</strong>, and <strong>Delete Folder</strong>. A folder can only be deleted when it is empty.</p>
+
+<h2 id="search">Search the whole project</h2>
+<p>Open the project <kbd>⋯</kbd> menu → <strong>Search and replace…</strong>, or click <strong>Search all documents…</strong> in the find bar.</p>
+<figure class="small">
+  <img src="assets/project-search.png" alt="The Search and replace window, listing four documents that mention Mara" loading="lazy">
+</figure>
+<ul>
+<li>Type what to find. The list shows every document with a match, where it sits, how many matches it has, and each match in its sentence.</li>
+<li><strong>Match case</strong> and <strong>Whole word</strong> work as in the find bar. <strong>Look in</strong> chooses the sections: Writing and Background, and if you like the AI setup's System and Prompts.</li>
+<li>Click a document's title to open it, with the find bar showing the same search.</li>
+<li>To replace, type the new text, untick any document to leave out, and click <strong>Replace in … documents</strong>. The app asks first, and keeps each document's current text in <a href="safety.html#history">Version history</a> before it changes anything.</li>
+</ul>
+<p>Search looks in the text of your documents, not in their titles.</p>
+
+<h2 id="questions">Names and questions</h2>
+<figure class="small">
+  <img src="assets/ask.png" alt="The window that asks for a new document&#x27;s title" loading="lazy">
+</figure>
+<p>When the app needs a name, or asks before deleting, a small window opens. Press <kbd>↵</kbd> to confirm or <kbd>Esc</kbd> to cancel. A delete question has a red button and starts on <em>Cancel</em>, so <kbd>↵</kbd> alone never deletes anything.</p>
+
+<nav class="help-pager" aria-label="More help">
+  <a href="writing.html">← Writing</a>
+  <a href="ai.html">Working with AI →</a>
+</nav>
+  </main>
+</div>
+</body>
+</html>

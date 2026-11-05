@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keeping your work safe · SJB Writer Help</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../branding/favicon-32x32.png">
+  <link rel="stylesheet" href="help.css">
+  <script src="help.js" defer></script>
+</head>
+<body>
+<header class="help-top">
+  <a class="help-brand" href="index.html"><img src="../branding/icon-192.png" alt="">SJB Writer Help</a>
+  <a class="help-back" id="helpBack" href="/">Back to the app</a>
+</header>
+<div class="help-layout">
+  <nav class="help-nav" aria-label="Help pages">
+    <h2>Help</h2>
+    <ol>
+      <li><a href="index.html">Start here</a></li>
+      <li><a href="writing.html">Writing</a></li>
+      <li><a href="organizing.html">Projects and the sidebar</a></li>
+      <li><a href="ai.html">Working with AI</a></li>
+      <li><a href="models.html">Models and settings</a></li>
+      <li><a href="safety.html" aria-current="page">Keeping your work safe</a></li>
+      <li><a href="files.html">Your files</a></li>
+      <li><a href="look.html">Look and layout</a></li>
+    </ol>
+  </nav>
+  <main class="help-main">
+<h1>Keeping your work safe</h1>
+<p class="help-lead">Nothing you write is lost by a crash, a bad save, a wrong click, or another program.</p>
+<nav class="help-toc" aria-label="On this page">
+  <strong>On this page</strong>
+  <ul>
+    <li><a href="#saves">Safe saving</a></li>
+    <li><a href="#history">Version history</a></li>
+    <li><a href="#trash">The Trash</a></li>
+    <li><a href="#outside">Editing in another program</a></li>
+    <li><a href="#backup">Backups</a></li>
+  </ul>
+</nav>
+
+<h2 id="saves">Safe saving</h2>
+<p>The app writes each save to a new file first and swaps it in only when it is complete. A crash or a full disk can never leave a half-written chapter.</p>
+
+<h2 id="history">Version history</h2>
+<p>Before a save changes a document, the app keeps a copy of the old text. It keeps at most one copy every 5 minutes, and the last 50 copies of each document.</p>
+<p>To look back, hover over the document in the sidebar and click <kbd>⋯</kbd> → <strong>Version history…</strong></p>
+<figure>
+  <img src="assets/history.png" alt="The Version history window" loading="lazy">
+</figure>
+<p>Click a version to read it. <strong>Restore this version</strong> brings it back. Your current text is kept as a version first, so a restore can be undone too.</p>
+
+<h2 id="trash">The Trash</h2>
+<p>Deleting never removes anything right away. Deleted documents and projects go to the Trash. Open it from the project <kbd>⋯</kbd> menu → <strong>Trash…</strong></p>
+<figure class="small">
+  <img src="assets/trash.png" alt="The Trash window with one deleted note" loading="lazy">
+</figure>
+<ul>
+<li><strong>Restore</strong> puts an item back where it was, even inside its old folder. If a new document took its name, the restored one gets a new name, so nothing is overwritten.</li>
+<li><strong>Empty trash</strong> deletes everything in the list forever. It asks first.</li>
+</ul>
+<p>The Trash shows the open project, the AI setup files, and deleted projects. To see another project's trash, open that project first.</p>
+
+<h2 id="outside">Editing in another program</h2>
+<p>Your documents are plain files, so you can also edit them in Obsidian or any text editor.</p>
+<ul>
+<li>When you come back to SJB Writer, it reloads a document that changed elsewhere, if you have no unsaved edits.</li>
+<li>If you do have unsaved edits, it tells you. When you save, the other version is kept in Version history first.</li>
+<li>Documents added in the other program appear in the sidebar. Documents removed there disappear from it.</li>
+</ul>
+
+<h2 id="backup">Backups</h2>
+<p>Your books are ordinary files in your <a href="files.html#folder">books folder</a>. Back up that folder like any other: with Time Machine, a cloud drive, or Git.</p>
+
+<nav class="help-pager" aria-label="More help">
+  <a href="models.html">← Models and settings</a>
+  <a href="files.html">Your files →</a>
+</nav>
+  </main>
+</div>
+</body>
+</html>

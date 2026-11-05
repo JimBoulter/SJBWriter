@@ -5,52 +5,52 @@
       "id": "epbm",
       "items": [
         {
-          "filename": "epbm-1-premise.json",
+          "filename": "epbm-1-premise.md",
           "title": "EPBM 1 - Premise",
           "type": "file"
         },
         {
-          "filename": "epbm-2-characters.json",
+          "filename": "epbm-2-characters.md",
           "title": "EPBM 2 - Characters",
           "type": "file"
         },
         {
-          "filename": "epbm-3-outline.json",
+          "filename": "epbm-3-outline.md",
           "title": "EPBM 3 - Outline",
           "type": "file"
         },
         {
-          "filename": "epbm-4-chapter-plan.json",
+          "filename": "epbm-4-chapter-plan.md",
           "title": "EPBM 4 - Chapter Plan",
           "type": "file"
         },
         {
-          "filename": "epbm-5-chapter-draft.json",
+          "filename": "epbm-5-chapter-draft.md",
           "title": "EPBM 5 - Chapter Draft",
           "type": "file"
         },
         {
-          "filename": "epbm-6-chapter-editing-plan.json",
+          "filename": "epbm-6-chapter-editing-plan.md",
           "title": "EPBM 6 - Chapter Editing Plan",
           "type": "file"
         },
         {
-          "filename": "epbm-7-chapter-final.json",
+          "filename": "epbm-7-chapter-final.md",
           "title": "EPBM 7 - Chapter Final",
           "type": "file"
         },
         {
-          "filename": "epbm-8-continuity-check.json",
+          "filename": "epbm-8-continuity-check.md",
           "title": "EPBM 8 - Continuity Check",
           "type": "file"
         },
         {
-          "filename": "epbm-9-review-refinement.json",
+          "filename": "epbm-9-review-refinement.md",
           "title": "EPBM 9 - Review & Refinement",
           "type": "file"
         },
         {
-          "filename": "plan.json",
+          "filename": "plan.md",
           "title": "7D Plan - Sample Prompt",
           "type": "file",
           "wordCount": 210
@@ -62,24 +62,24 @@
   ],
   "system": [
     {
-      "filename": "always-on-instructions-from-cv-to-be-edited.json",
+      "filename": "always-on-instructions-from-cv-to-be-edited.md",
       "title": "Always On Instructions",
       "type": "file",
       "wordCount": 1951
     },
     {
-      "filename": "em-dashes.json",
+      "filename": "em-dashes.md",
       "title": "Em dashes",
       "type": "file"
     }
   ],
   "last_opened": {
     "section": "system",
-    "filename": "ai-program-instructions-and-tasks.json"
+    "filename": "ai-program-instructions-and-tasks.md"
   },
   "last_opened_global": {
     "project": "sample-project",
     "section": "background",
-    "filename": "setup.json"
+    "filename": "setup.md"
   }
 }

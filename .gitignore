@@ -17,3 +17,27 @@ __pycache__/
 
 Projects/sample-project/.DS_Store
 Global/ollama_order.json
+
+workspace-agents/
+
+# Personal app settings (font, theme, recent projects); the app recreates it
+Global/app_state.json
+# Where the writer keeps their books (Settings → Books folder)
+data_folder.json
+.env
+# Version history, trash, and pre-Markdown JSON backups kept by the app (must stay last to win over the sample-project exception)
+.history/
+.trash/
+.json-backup/
+.tmp-*
+
+# Personal prompts and system rules stay local; only the shipped starters are tracked
+Global/prompts/*
+!Global/prompts/epbm-*.md
+!Global/prompts/plan.md
+Global/system/*
+!Global/system/always-on-instructions-from-cv-to-be-edited.md
+!Global/system/em-dashes.md
+
+# Cached copy of OpenRouter's model list (refreshed from Manage Models)
+Global/openrouter_models.json

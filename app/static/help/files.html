@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your files · SJB Writer Help</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../branding/favicon-32x32.png">
+  <link rel="stylesheet" href="help.css">
+  <script src="help.js" defer></script>
+</head>
+<body>
+<header class="help-top">
+  <a class="help-brand" href="index.html"><img src="../branding/icon-192.png" alt="">SJB Writer Help</a>
+  <a class="help-back" id="helpBack" href="/">Back to the app</a>
+</header>
+<div class="help-layout">
+  <nav class="help-nav" aria-label="Help pages">
+    <h2>Help</h2>
+    <ol>
+      <li><a href="index.html">Start here</a></li>
+      <li><a href="writing.html">Writing</a></li>
+      <li><a href="organizing.html">Projects and the sidebar</a></li>
+      <li><a href="ai.html">Working with AI</a></li>
+      <li><a href="models.html">Models and settings</a></li>
+      <li><a href="safety.html">Keeping your work safe</a></li>
+      <li><a href="files.html" aria-current="page">Your files</a></li>
+      <li><a href="look.html">Look and layout</a></li>
+    </ol>
+  </nav>
+  <main class="help-main">
+<h1>Your files</h1>
+<p class="help-lead">Your books are plain Markdown files that you own, wherever you keep them.</p>
+<nav class="help-toc" aria-label="On this page">
+  <strong>On this page</strong>
+  <ul>
+    <li><a href="#markdown">Documents are Markdown files</a></li>
+    <li><a href="#folder">Where your books live</a></li>
+    <li><a href="#obsidian">Working with Obsidian</a></li>
+    <li><a href="#import">Import</a></li>
+    <li><a href="#export">Export</a></li>
+  </ul>
+</nav>
+
+<h2 id="markdown">Documents are Markdown files</h2>
+<p>Every document is a <code>.md</code> file. It starts with a short header that holds the title, followed by your text:</p>
+<pre><code>---
+title: "Chapter 1: The Light"
+---
+
+The bus left her at the end of the road.</code></pre>
+<p>Any text editor can open these files. Other programs may add lines to the header, such as Obsidian tags, and SJB Writer keeps them.</p>
+<p>Older versions of the app saved JSON files. They were converted once, and the originals are kept in hidden <code>.json-backup</code> folders.</p>
+
+<h2 id="folder">Where your books live</h2>
+<p>By default, your books are inside the app's folder:</p>
+<pre><code>Global/prompts/          saved instructions (Prompts)
+Global/system/           rules (System)
+Projects/&lt;project&gt;/background/   notes
+Projects/&lt;project&gt;/writing/      the book</code></pre>
+<p>To keep them somewhere else, open Settings → <strong>Books folder</strong> → <strong>Choose…</strong> and pick a folder in the Mac's folder window.</p>
+<ul>
+<li>If the folder is empty, the app copies your books there and uses them from then on. The originals stay where they were, as a backup.</li>
+<li>If the folder already has books, the app uses those.</li>
+<li><strong>Use the app folder again</strong> switches back.</li>
+</ul>
+<p>Your settings, API key, and model list stay with the app. If the chosen folder is missing, for example on an unplugged drive, the app uses the app folder and tells you.</p>
+
+<h2 id="obsidian">Working with Obsidian</h2>
+<p>Choose a books folder inside your Obsidian vault. Then both programs work on the same files: write in either one, and the other one sees the changes. See <a href="safety.html#outside">Editing in another program</a>.</p>
+
+<h2 id="import">Import</h2>
+<p>Bring in work from other programs: open the project <kbd>⋯</kbd> menu → <strong>Import…</strong></p>
+<figure class="small">
+  <img src="assets/import.png" alt="The Import window, showing four documents found and two files skipped" loading="lazy">
+</figure>
+<ol>
+<li>Click <strong>Choose files…</strong> for single documents, or <strong>Choose a folder…</strong> for a whole folder with its subfolders.</li>
+<li>Check the list. It shows each document's title and word count, and any file it will skip, with the reason. Nothing has been added yet.</li>
+<li>Choose where it goes: <strong>this project</strong> or <strong>a new project</strong> (named after the folder), and <strong>Writing</strong> or <strong>Background</strong>.</li>
+<li>Click <strong>Import</strong>.</li>
+</ol>
+<ul>
+<li><strong>Markdown</strong> files keep their title and header lines. <strong>Text</strong> files take their title from the file name.</li>
+<li><strong>Word (.docx)</strong> files keep headings, bold, italic, lists, quotes, and scene breaks. Their title is the document title set in Word, or the file name. Old <code>.doc</code> files are skipped: open them in Word and save them as <code>.docx</code> first.</li>
+<li>Files that put each paragraph on its own line, with no empty line between paragraphs, get the empty lines added, so the paragraphs keep their spacing everywhere, including Obsidian. The list says <em>paragraph spacing added</em>.</li>
+<li>Subfolders become sidebar folders, and documents come in name order, so Chapter 2 comes before Chapter 10.</li>
+<li>Your original files are never changed, and nothing in the project is overwritten: a document whose name is taken gets a number.</li>
+</ul>
+
+<h2 id="export">Export</h2>
+<p><strong>One document:</strong> hover over it in the sidebar and choose <kbd>⋯</kbd> → <strong>Export as Markdown</strong> or <strong>Export as Word</strong>.</p>
+<p><strong>The whole book:</strong> open the project <kbd>⋯</kbd> menu → <strong>Export manuscript…</strong></p>
+<figure class="small">
+  <img src="assets/export.png" alt="The Export manuscript window" loading="lazy">
+</figure>
+<ul>
+<li><strong>Format</strong>: Word (.docx) or Markdown (.md).</li>
+<li><strong>Documents</strong>: all of Writing, in sidebar order, or only the ticked documents.</li>
+<li><strong>Headings</strong>: folder and document titles become headings, so Part → Chapter works.</li>
+<li><strong>New pages</strong>: each document starts on a new page in Word.</li>
+</ul>
+<p>The Word file uses a standard manuscript layout: Times New Roman 12, double spaced, indented first lines, and 1-inch margins. Bold, italics, headings, lists, quotes, and <code>* * *</code> scene breaks carry over.</p>
+
+<nav class="help-pager" aria-label="More help">
+  <a href="safety.html">← Keeping your work safe</a>
+  <a href="look.html">Look and layout →</a>
+</nav>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Start here · SJB Writer Help</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../branding/favicon-32x32.png">
+  <link rel="stylesheet" href="help.css">
+  <script src="help.js" defer></script>
+</head>
+<body>
+<header class="help-top">
+  <a class="help-brand" href="index.html"><img src="../branding/icon-192.png" alt="">SJB Writer Help</a>
+  <a class="help-back" id="helpBack" href="/">Back to the app</a>
+</header>
+<div class="help-layout">
+  <nav class="help-nav" aria-label="Help pages">
+    <h2>Help</h2>
+    <ol>
+      <li><a href="index.html" aria-current="page">Start here</a></li>
+      <li><a href="writing.html">Writing</a></li>
+      <li><a href="organizing.html">Projects and the sidebar</a></li>
+      <li><a href="ai.html">Working with AI</a></li>
+      <li><a href="models.html">Models and settings</a></li>
+      <li><a href="safety.html">Keeping your work safe</a></li>
+      <li><a href="files.html">Your files</a></li>
+      <li><a href="look.html">Look and layout</a></li>
+    </ol>
+  </nav>
+  <main class="help-main">
+<h1>Welcome to SJB Writer</h1>
+<p class="help-lead">A writing app that runs on your own computer, with AI help only when you ask for it.</p>
+<nav class="help-toc" aria-label="On this page">
+  <strong>On this page</strong>
+  <ul>
+    <li><a href="#what">What SJB Writer is</a></li>
+    <li><a href="#start">Starting the app</a></li>
+    <li><a href="#screen">The screen at a glance</a></li>
+    <li><a href="#first-steps">Your first steps</a></li>
+    <li><a href="#shortcuts">Keyboard shortcuts</a></li>
+    <li><a href="#pages">All help pages</a></li>
+  </ul>
+</nav>
+
+<h2 id="what">What SJB Writer is</h2>
+<p>SJB Writer keeps your books in plain text files on your computer and shows them in your web browser. It works without the internet.</p>
+<p>When you want AI help, you choose exactly what the AI sees: your rules, your notes, your chapters, and an instruction. The AI then writes at your cursor. You can use online models through <strong>OpenRouter</strong>, or models that run on your own Mac through <strong>Ollama</strong>. AI is optional, and you can turn it off completely.</p>
+
+<h2 id="start">Starting the app</h2>
+<ol>
+<li>Open the Terminal in the SJB Writer folder.</li>
+<li>Type <code>cd app</code> and press Return.</li>
+<li>Type <code>python3 app.py</code> and press Return.</li>
+<li>Open <a href="http://127.0.0.1:5050">http://127.0.0.1:5050</a> in your browser.</li>
+</ol>
+<p>Keep the Terminal window open while you write. To stop the app, go back to the Terminal and press <kbd>Ctrl</kbd><kbd>C</kbd>.</p>
+
+<h2 id="screen">The screen at a glance</h2>
+<figure>
+  <img src="assets/overview.png" alt="The SJB Writer window, with six numbered areas" loading="lazy">
+  <figcaption>The six areas of the window.</figcaption>
+</figure>
+<ol class="callouts">
+<li data-n="1"><strong>Top bar.</strong> On the left: the logo (click it to close the document), the version, and the sidebar button. On the right: the AI setup panel, Visual layout, light/dark mode, Help, and Settings.</li>
+<li data-n="2"><strong>Sidebar.</strong> Your project and its two sections: <em>Background</em> (notes) and <em>Writing</em> (the book). See <a href="organizing.html">Projects and the sidebar</a>.</li>
+<li data-n="3"><strong>Editor.</strong> The title and the text of the open document. See <a href="writing.html">Writing</a>.</li>
+<li data-n="4"><strong>AI dock.</strong> The instruction box, the model, and the Generate button. See <a href="ai.html">Working with AI</a>.</li>
+<li data-n="5"><strong>AI setup panel.</strong> Rules (System), saved instructions (Prompts), and generation settings.</li>
+<li data-n="6"><strong>Status bar.</strong> Where you are, the save state, words, dialogue, reading time, and the size and cost of the next AI request.</li>
+</ol>
+
+<h2 id="first-steps">Your first steps</h2>
+<ol>
+<li><strong>Pick a project.</strong> Click the project name at the top of the sidebar, or use the project <kbd>⋯</kbd> menu to create one.</li>
+<li><strong>Create a document.</strong> Click the page-with-a-plus button next to <em>Writing</em> and give it a title.</li>
+<li><strong>Write.</strong> The app saves for you. <kbd>⌘</kbd><kbd>S</kbd> saves right away.</li>
+<li><strong>Optional: add AI.</strong> Open Settings, paste an OpenRouter key or install Ollama, and pick a model. Then type an instruction and click Generate.</li>
+</ol>
+
+<h2 id="shortcuts">Keyboard shortcuts</h2>
+<table>
+<thead><tr><th>Keys</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><kbd>⌘</kbd><kbd>S</kbd></td><td>Save now</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>F</kbd></td><td>Find in the open document</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>H</kbd></td><td>Find and replace in the open document</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>G</kbd> / <kbd>⌘</kbd><kbd>⇧</kbd><kbd>G</kbd></td><td>Next or previous match</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>E</kbd></td><td>Markdown preview on or off</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>↵</kbd></td><td>Generate with the AI</td></tr>
+<tr><td><kbd>Esc</kbd></td><td>Close the find bar or the open window, stop the AI, or leave zen mode</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>\</kbd></td><td>Show or hide the sidebar</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>⌥</kbd><kbd>\</kbd></td><td>Show or hide the AI setup panel</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>F</kbd></td><td>Zen mode on or off</td></tr>
+<tr><td><kbd>Tab</kbd> / <kbd>⇧</kbd><kbd>Tab</kbd></td><td>Indent or outdent in the editor</td></tr>
+</tbody>
+</table>
+<p>On Windows and Linux, use <kbd>Ctrl</kbd> where this table shows <kbd>⌘</kbd>.</p>
+
+<h2 id="pages">All help pages</h2>
+<div class="help-cards">
+  <a href="writing.html"><strong>Writing</strong><span>Open a document, write, and let the app save for you.</span></a>
+  <a href="organizing.html"><strong>Projects and the sidebar</strong><span>Keep each book in its own project, and its notes and chapters in order.</span></a>
+  <a href="ai.html"><strong>Working with AI</strong><span>Choose what the AI sees, tell it what to write, and keep control of the result.</span></a>
+  <a href="models.html"><strong>Models and settings</strong><span>Connect an AI model, and find every setting in one window.</span></a>
+  <a href="safety.html"><strong>Keeping your work safe</strong><span>Nothing you write is lost by a crash, a bad save, a wrong click, or another program.</span></a>
+  <a href="files.html"><strong>Your files</strong><span>Your books are plain Markdown files that you own, wherever you keep them.</span></a>
+  <a href="look.html"><strong>Look and layout</strong><span>Light or dark, your accent color, and a layout that fits any window.</span></a>
+</div>
+
+<nav class="help-pager" aria-label="More help">
+  <span></span>
+  <a href="writing.html">Writing →</a>
+</nav>
+  </main>
+</div>
+</body>
+</html>

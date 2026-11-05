@@ -1,0 +1,43 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "SJB Writer: Start",
+      "detail": "Start this fork at http://127.0.0.1:4107 using the existing web Python environment.",
+      "type": "process",
+      "command": "${env:HOME}/.venvs/web/bin/python",
+      "args": [
+        "-m", "flask", "--app", "app", "run",
+        "--host", "127.0.0.1", "--port", "4107", "--no-debugger", "--no-reload"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/app",
+        "env": { "FLASK_DEBUG": "0" }
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "runOptions": { "instanceLimit": 1 },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "SJB Writer: Stop",
+      "detail": "Stop the server on port 4107 after verifying it belongs to this checkout.",
+      "type": "process",
+      "command": "/bin/bash",
+      "args": ["${workspaceFolder}/scripts/stop-app.sh"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
+      }
+    }
+  ]
+}

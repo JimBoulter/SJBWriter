@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Writing · SJB Writer Help</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../branding/favicon-32x32.png">
+  <link rel="stylesheet" href="help.css">
+  <script src="help.js" defer></script>
+</head>
+<body>
+<header class="help-top">
+  <a class="help-brand" href="index.html"><img src="../branding/icon-192.png" alt="">SJB Writer Help</a>
+  <a class="help-back" id="helpBack" href="/">Back to the app</a>
+</header>
+<div class="help-layout">
+  <nav class="help-nav" aria-label="Help pages">
+    <h2>Help</h2>
+    <ol>
+      <li><a href="index.html">Start here</a></li>
+      <li><a href="writing.html" aria-current="page">Writing</a></li>
+      <li><a href="organizing.html">Projects and the sidebar</a></li>
+      <li><a href="ai.html">Working with AI</a></li>
+      <li><a href="models.html">Models and settings</a></li>
+      <li><a href="safety.html">Keeping your work safe</a></li>
+      <li><a href="files.html">Your files</a></li>
+      <li><a href="look.html">Look and layout</a></li>
+    </ol>
+  </nav>
+  <main class="help-main">
+<h1>Writing</h1>
+<p class="help-lead">Open a document, write, and let the app save for you.</p>
+<nav class="help-toc" aria-label="On this page">
+  <strong>On this page</strong>
+  <ul>
+    <li><a href="#open">Opening a document</a></li>
+    <li><a href="#saving">Saving</a></li>
+    <li><a href="#toolbar">The formatting toolbar</a></li>
+    <li><a href="#find">Find and replace</a></li>
+    <li><a href="#preview">Markdown preview</a></li>
+    <li><a href="#zen">Zen mode</a></li>
+    <li><a href="#status">The status bar</a></li>
+    <li><a href="#shortcuts">Shortcuts</a></li>
+  </ul>
+</nav>
+
+<h2 id="open">Opening a document</h2>
+<p>Click a document in the sidebar to open it. Its title is at the top of the editor; type there to change it. To also change the file name, use <kbd>⋯</kbd> → <em>Rename</em> in the sidebar.</p>
+<p>To close the document, click the <kbd>×</kbd> next to the title, or click the logo in the top bar. The empty screen offers buttons to start a new document.</p>
+
+<h2 id="saving">Saving</h2>
+<p>You do not need to save by hand. The app saves:</p>
+<ul>
+<li>after 30 seconds without typing,</li>
+<li>when you open another document,</li>
+<li>when you leave the title box,</li>
+<li>and when you press <kbd>⌘</kbd><kbd>S</kbd>.</li>
+</ul>
+<p>The status bar says <em>Saved</em> or <em>Unsaved</em>. If you try to close the browser tab with unsaved changes, the browser asks first.</p>
+<div class="help-note"><p>Each save keeps the old text in <a href="safety.html#history">Version history</a>, so you can always go back.</p></div>
+
+<h2 id="toolbar">The formatting toolbar</h2>
+<figure>
+  <img src="assets/toolbar.png" alt="The title and the formatting toolbar" loading="lazy">
+</figure>
+<p>The text is <a href="files.html#markdown">Markdown</a>: plain text with a few symbols for formatting. The buttons add those symbols for you:</p>
+<table>
+<thead><tr><th>Button</th><th>Adds</th><th>Looks like</th></tr></thead>
+<tbody>
+<tr><td><strong>B</strong></td><td><code>**bold**</code></td><td><strong>bold</strong></td></tr>
+<tr><td><em>I</em></td><td><code>*italic*</code></td><td><em>italic</em></td></tr>
+<tr><td>H2</td><td><code>## Heading</code></td><td>a heading</td></tr>
+<tr><td>List</td><td><code>- item</code></td><td>a bullet list</td></tr>
+</tbody>
+</table>
+<p>The font and size menus change how the editor looks. They do not change your text.</p>
+<p>A line with only <code>* * *</code> is a scene break. Pasted text always arrives as plain text.</p>
+
+<h2 id="find">Find and replace</h2>
+<p>Press <kbd>⌘</kbd><kbd>F</kbd> to search the open document. The find bar opens under the toolbar, and every match is marked: the current one in orange, the others in yellow.</p>
+<figure>
+  <img src="assets/find-bar.png" alt="The find bar, with three matches of “light” marked in the text" loading="lazy">
+</figure>
+<ul>
+<li><kbd>↵</kbd> goes to the next match and <kbd>⇧</kbd><kbd>↵</kbd> to the previous one; the arrows do the same.</li>
+<li><strong>Aa</strong> (Match case) finds only the same capitals. <strong>ab</strong> (Whole word) skips matches inside longer words, so “light” does not find “lighthouse”.</li>
+<li>Press <kbd>⌘</kbd><kbd>⇧</kbd><kbd>H</kbd>, or click the arrow at the left, to show <strong>Replace</strong> and <strong>Replace all</strong>. <kbd>⌘</kbd><kbd>Z</kbd> undoes a replace, one step at a time.</li>
+<li>Selected text becomes the search when you press <kbd>⌘</kbd><kbd>F</kbd>. <kbd>Esc</kbd> closes the bar.</li>
+</ul>
+<p>To search every document at once, click <strong>Search all documents…</strong> in the find bar. See <a href="organizing.html#search">Search the whole project</a>.</p>
+
+<h2 id="preview">Markdown preview</h2>
+<p>Click the eye button, or press <kbd>⌘</kbd><kbd>E</kbd>, to see the formatted text. Each line of your text is its own paragraph, here and in Word export. Double-click the preview, or press <kbd>⌘</kbd><kbd>E</kbd> again, to go back to editing.</p>
+<figure>
+  <img src="assets/preview.png" alt="Chapter 1 in Markdown preview, with italics and a scene break line" loading="lazy">
+</figure>
+
+<h2 id="zen">Zen mode</h2>
+<p>Zen mode hides everything except the title and your text. Click the arrows at the right of the toolbar, or press <kbd>⌘</kbd><kbd>⇧</kbd><kbd>F</kbd>. Press <kbd>Esc</kbd> to come back.</p>
+<figure>
+  <img src="assets/zen.png" alt="Zen mode: only the title and the text" loading="lazy">
+</figure>
+
+<h2 id="status">The status bar</h2>
+<figure>
+  <img src="assets/statusbar.png" alt="The status bar" loading="lazy">
+</figure>
+<ul>
+<li><strong>Where you are</strong>: the project and the document.</li>
+<li><strong>Saved</strong> or <strong>Unsaved</strong>.</li>
+<li><strong>Words</strong> in this document.</li>
+<li><strong>Dialogue</strong>: the share of words inside quotation marks.</li>
+<li><strong>Reading time</strong>.</li>
+<li><strong>AI request</strong>: how big the next AI request is, and what it may cost. Click it to see the exact text. See <a href="ai.html#cost">Size and cost</a>.</li>
+</ul>
+
+<h2 id="shortcuts">Shortcuts</h2>
+<table>
+<thead><tr><th>Keys</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><kbd>⌘</kbd><kbd>S</kbd></td><td>Save now</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>F</kbd></td><td>Find in the open document</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>H</kbd></td><td>Find and replace in the open document</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>G</kbd> / <kbd>⌘</kbd><kbd>⇧</kbd><kbd>G</kbd></td><td>Next or previous match</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>E</kbd></td><td>Markdown preview on or off</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>↵</kbd></td><td>Generate with the AI</td></tr>
+<tr><td><kbd>Esc</kbd></td><td>Close the find bar or the open window, stop the AI, or leave zen mode</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>\</kbd></td><td>Show or hide the sidebar</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>⌥</kbd><kbd>\</kbd></td><td>Show or hide the AI setup panel</td></tr>
+<tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>F</kbd></td><td>Zen mode on or off</td></tr>
+<tr><td><kbd>Tab</kbd> / <kbd>⇧</kbd><kbd>Tab</kbd></td><td>Indent or outdent in the editor</td></tr>
+</tbody>
+</table>
+<p>On Windows and Linux, use <kbd>Ctrl</kbd> where this table shows <kbd>⌘</kbd>.</p>
+
+<nav class="help-pager" aria-label="More help">
+  <a href="index.html">← Start here</a>
+  <a href="organizing.html">Projects and the sidebar →</a>
+</nav>
+  </main>
+</div>
+</body>
+</html>

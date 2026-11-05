@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Working with AI · SJB Writer Help</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../branding/favicon-32x32.png">
+  <link rel="stylesheet" href="help.css">
+  <script src="help.js" defer></script>
+</head>
+<body>
+<header class="help-top">
+  <a class="help-brand" href="index.html"><img src="../branding/icon-192.png" alt="">SJB Writer Help</a>
+  <a class="help-back" id="helpBack" href="/">Back to the app</a>
+</header>
+<div class="help-layout">
+  <nav class="help-nav" aria-label="Help pages">
+    <h2>Help</h2>
+    <ol>
+      <li><a href="index.html">Start here</a></li>
+      <li><a href="writing.html">Writing</a></li>
+      <li><a href="organizing.html">Projects and the sidebar</a></li>
+      <li><a href="ai.html" aria-current="page">Working with AI</a></li>
+      <li><a href="models.html">Models and settings</a></li>
+      <li><a href="safety.html">Keeping your work safe</a></li>
+      <li><a href="files.html">Your files</a></li>
+      <li><a href="look.html">Look and layout</a></li>
+    </ol>
+  </nav>
+  <main class="help-main">
+<h1>Working with AI</h1>
+<p class="help-lead">Choose what the AI sees, tell it what to write, and keep control of the result.</p>
+<nav class="help-toc" aria-label="On this page">
+  <strong>On this page</strong>
+  <ul>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#panel">The AI setup panel</a></li>
+    <li><a href="#what">What the AI sees</a></li>
+    <li><a href="#dock">The AI dock</a></li>
+    <li><a href="#markers">Where the text goes, and the markers</a></li>
+    <li><a href="#settings">Generation settings</a></li>
+    <li><a href="#cost">Size and cost</a></li>
+    <li><a href="#off">Turning AI off</a></li>
+  </ul>
+</nav>
+
+<h2 id="how">How it works</h2>
+<ol>
+<li>You choose what the AI sees: rules, notes, chapters, and the open document.</li>
+<li>You write an instruction, or pick a saved one.</li>
+<li>You put the cursor where the new text should go and click <strong>Generate</strong>.</li>
+<li>The AI's text appears at the cursor, between two markers, so you can see what is new.</li>
+</ol>
+<div class="help-note"><p>You need a model first. See <a href="models.html">Models and settings</a>.</p></div>
+
+<h2 id="panel">The AI setup panel</h2>
+<figure class="narrow">
+  <img src="assets/ai-panel.png" alt="The AI setup panel with System, Prompts, and Generation" loading="lazy">
+</figure>
+<p>Open it with the panel button in the top bar, the summary chip next to the instruction box, or <kbd>⌘</kbd><kbd>⌥</kbd><kbd>\</kbd>. If the window gets too narrow, the panel tucks itself away to give the editor room.</p>
+<ul>
+<li><strong>System</strong> holds your <em>rules</em>: style, voice, things to avoid. Tick the ones to use. They go to the AI as rules, which models take more seriously than plain text.</li>
+<li><strong>Prompts</strong> holds saved <em>instructions</em>, such as the EPBM steps. Pick one, and it fills the instruction box.</li>
+<li><strong>Generation</strong> and <strong>Output markers</strong> are explained below.</li>
+</ul>
+<p>System and Prompts are shared by all your projects.</p>
+
+<h2 id="what">What the AI sees</h2>
+<p>Each request contains, in this order:</p>
+<ol>
+<li>the ticked <strong>System</strong> files, as rules,</li>
+<li>the ticked <strong>Background</strong> documents,</li>
+<li>the ticked <strong>Writing</strong> documents,</li>
+<li>the <strong>open document</strong>, including changes you have not saved yet,</li>
+<li>your <strong>instruction</strong>.</li>
+</ol>
+<p>Each part is labeled with its title, so the model can tell your notes from your chapters. To check before sending, click the eye-in-a-frame button next to Generate, or click the <em>AI request</em> number in the status bar:</p>
+<figure>
+  <img src="assets/request-preview.png" alt="The window that shows exactly what the AI will see" loading="lazy">
+</figure>
+<p><strong>Copy</strong> puts the whole text on your clipboard. <strong>Generate</strong> sends it.</p>
+
+<h2 id="dock">The AI dock</h2>
+<figure>
+  <img src="assets/ai-dock.png" alt="The instruction box, summary chip, model menu, and AI buttons" loading="lazy">
+</figure>
+<ul>
+<li><strong>Instruction box</strong>: what you want the AI to do.</li>
+<li><strong>Summary chip</strong>: how many rules are ticked and which prompt is picked. Click it to open the AI setup panel.</li>
+<li><strong>Model</strong>: the model to use.</li>
+<li><strong>Generate</strong> (the sparkle), or <kbd>⌘</kbd><kbd>↵</kbd>.</li>
+<li><strong>Stop</strong> (the square), or <kbd>Esc</kbd>.</li>
+<li><strong>Undo last generation</strong>: removes the AI's last text. It goes back up to 10 generations.</li>
+<li><strong>Preview AI request</strong>, <strong>Save</strong>, and <strong>Clear instruction</strong>.</li>
+</ul>
+<p>In a narrow window, some buttons move into the <kbd>⋯</kbd> menu.</p>
+
+<h2 id="markers">Where the text goes, and the markers</h2>
+<figure>
+  <img src="assets/ai-text.png" alt="AI text added at the end of Chapter 2, after a marker" loading="lazy">
+</figure>
+<p>The AI writes at your cursor. Markers show where its text begins and ends. Change them under <strong>Output markers</strong> in the AI setup panel:</p>
+<ul>
+<li>Untick <em>Mark where AI text begins and ends</em> to turn them off.</li>
+<li>Change the wording of the <em>Before</em> and <em>After</em> markers, or leave one empty to skip it.</li>
+<li>The <em>After</em> marker only appears when the AI writes at the start or in the middle of your text.</li>
+</ul>
+
+<h2 id="settings">Generation settings</h2>
+<table>
+<thead><tr><th>Setting</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td>Temperature</td><td>From <em>Focused</em> (0) to <em>Varied</em> (2). The default is 0.7. Higher values give more surprising text.</td></tr>
+<tr><td>Reasoning</td><td>How hard a reasoning model thinks before writing: Model default, Off, Low, Medium, or High. The note below it says what the chosen model supports.</td></tr>
+<tr><td>Max reply length</td><td>The longest reply, in tokens. 1,000 tokens is about 750 words. Reasoning counts too. Leave it empty for no limit.</td></tr>
+<tr><td>Search the web</td><td>Lets an OpenRouter model look things up online, with up to 10 websites. Each search costs about $0.007, even on free models.</td></tr>
+</tbody>
+</table>
+
+<h2 id="cost">Size and cost</h2>
+<p>The status bar shows the size of the next request in tokens, and its cost:</p>
+<ul>
+<li><strong>up to $0.017</strong>: the most it can cost, when a Max reply length is set.</li>
+<li><strong>$0.0016 + reply</strong>: the input cost; the reply is extra because its length is open.</li>
+<li><strong>free</strong> for free models, and <strong>local</strong> for Ollama models.</li>
+<li><strong>price unknown</strong> when the model is not in OpenRouter's price list.</li>
+</ul>
+<p>Hover over the number for the full breakdown. The app updates OpenRouter's prices once a day while AI features are on.</p>
+
+<h2 id="off">Turning AI off</h2>
+<p>To use SJB Writer as a plain editor, open Settings and untick <strong>Use AI features</strong>. The AI panel, the instruction box, and Generate disappear. Your AI settings are kept for when you turn it back on.</p>
+
+<nav class="help-pager" aria-label="More help">
+  <a href="organizing.html">← Projects and the sidebar</a>
+  <a href="models.html">Models and settings →</a>
+</nav>
+  </main>
+</div>
+</body>
+</html>

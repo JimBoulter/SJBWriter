@@ -7,87 +7,88 @@
   <link rel="icon"
       type="image/png"
       sizes="32x32"
-      href="{{ url_for('static', filename='favicon-32x32.png') }}">
+      href="{{ url_for('static', filename='branding/favicon-32x32.png') }}">
   <link rel="icon"
       type="image/png"
       sizes="16x16"
-      href="{{ url_for('static', filename='favicon-16x16.png') }}">
+      href="{{ url_for('static', filename='branding/favicon-16x16.png') }}">
   <link rel="apple-touch-icon"
-      href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+      href="{{ url_for('static', filename='branding/apple-touch-icon.png') }}">
   <link rel="icon"
       type="image/x-icon"
-      href="{{ url_for('static', filename='favicon.ico') }}">
+      href="{{ url_for('static', filename='branding/favicon.ico') }}">
 </head>
 <body>
+{% include "_icons.html" %}
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="top-bar">
+  <div class="top-bar-brand">
+    <!-- Logo = home: closes the document and shows the start screen -->
+    <button type="button" class="top-bar-home tip-start" onclick="closeDocument()" data-tip="Home" aria-label="Home: close the document">
+      <img src="{{ url_for('static', filename='branding/icon-192.png') }}" alt="" class="top-bar-logo" />
+      <span class="top-bar-version">v{{ app_version }}</span>
+    </button>
+    <button type="button" id="sidebarToggle" class="icon-btn ghost-btn tip-start" onclick="toggleSidebar()" data-tip="Sidebar (⌘\)" aria-label="Toggle sidebar" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-panel-left"/></svg></button>
+  </div>
+  <div class="top-bar-actions">
+    <button type="button" id="aiPanelToggle" class="icon-btn ghost-btn tip-end" onclick="toggleAiPanel()" data-tip="AI setup (⌘⌥\)" aria-label="Toggle AI setup" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-panel-right"/></svg></button>
+    <button type="button" id="visualToggle" class="icon-btn ghost-btn tip-end" onclick="openVisualPanel()" data-tip="Visual layout" aria-label="Visual layout"><svg class="icon" aria-hidden="true"><use href="#i-presentation"/></svg></button>
+    <button type="button" id="modeToggle" class="icon-btn ghost-btn tip-end" onclick="toggleLightDark()" data-tip="Dark mode" aria-label="Switch to dark mode"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+    <button type="button" id="helpBtn" class="icon-btn ghost-btn tip-end" onclick="openHelp()" data-tip="Help" aria-label="Help"><svg class="icon" aria-hidden="true"><use href="#i-circle-help"/></svg></button>
+    <button type="button" class="icon-btn ghost-btn gear-btn tip-end" onclick="openSettings()" data-tip="Settings" aria-label="Settings"><svg class="icon" aria-hidden="true"><use href="#i-settings"/></svg></button>
+  </div>
+</header>
 
 <!-- ===================== APP CONTAINER ===================== -->
 <div class="container">
 
   <!-- ===================== LEFT PANEL: CONTEXT BUILDER ===================== -->
   <div class="left">
-
-  <div class="section-group">
-    <!-- ---------- APP HEADER / GLOBAL CONTROLS ---------- -->
-    <div class="header-row">
-      <h2>Your Writing Helper</h2>
-      <button class="gear-btn" onclick="openSettings()">⚙️</button>
-    </div>
-    <!-- ---------- GLOBAL CONTEXT (Prompts + System) ---------- -->
-    <div class="section" data-weight="prompts">
-      <h3>
-        Prompts
-        <button onclick="createNew('prompts')">+</button>
-        <button onclick="createFolder('prompts')">📁</button>
-      </h3>
-      <div id="promptsList"></div>
-    </div>
-
-    <div class="section" data-weight="system">
-      <h3>
-        System
-        <button onclick="createNew('system')">+</button>
-        <button onclick="createFolder('system')">📁</button>
-      </h3>
-      <div id="systemList"></div>
-    </div>
-  </div>
+  <div class="resize-handle" data-resize="sidebar" role="separator" aria-orientation="vertical" aria-label="Resize sidebar" title="Drag to resize · double-click to reset"></div>
 
   <div class="section-group">
     <!-- ---------- PROJECT CONTEXT (Background + Writing) ---------- -->
     <div class="project-header-row">
 
         <div id="projectDropdown"
-             onclick="toggleProjectDropdown(event)">
+             class="tip-start"
+             onclick="toggleProjectDropdown(event)"
+             data-tip="Switch project">
 
+          <span class="project-icon"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg></span>
           <h2 id="currentProjectLabel">
-            Project: Default
+            Default
           </h2>
 
-          <span class="dropdown-arrow">▼</span>
+          <span class="dropdown-arrow"><svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></span>
 
         </div>
 
-      <span class="menu-btn"
-            onclick="toggleProjectMenu(event)">
-        ⋯
+      <span class="menu-btn tip-end"
+            onclick="toggleProjectMenu(event)"
+            data-tip="Project actions" aria-label="Project actions">
+        <svg class="icon" aria-hidden="true"><use href="#i-ellipsis"/></svg>
       </span>
 
     </div>
     <div id="projectsList" style="display:none;"></div>
     <div class="section"  data-weight="background">
-      <h3>
-        Background
-        <button onclick="createNew('background')">+</button>
-        <button onclick="createFolder('background')">📁</button>
+      <h3 class="section-header" draggable="true" data-section="background">
+        <button type="button" class="section-toggle" onclick="toggleSectionFold('background')" aria-expanded="true" aria-label="Fold or unfold Background"><svg class="icon fold-icon" aria-hidden="true"><use href="#i-chevron-down"/></svg><span>Background</span></button>
+        <button type="button" class="icon-btn" onclick="createNew('background')" data-tip="New file" aria-label="New file"><svg class="icon" aria-hidden="true"><use href="#i-file-plus"/></svg></button>
+        <button type="button" class="icon-btn" onclick="createFolder('background')" data-tip="New folder" aria-label="New folder"><svg class="icon" aria-hidden="true"><use href="#i-folder-plus"/></svg></button>
+        <button type="button" class="icon-btn sort-btn tip-end" data-sort-section="background" onclick="cycleSort('background')" data-tip="Sort: My order" aria-label="Sort: My order"><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-down"/></svg></button>
       </h3>
       <div id="backgroundList"></div>
     </div>
 
     <div class="section" data-weight="writing">
-      <h3>
-        Writing
-        <button onclick="createNew('writing')">+</button>
-        <button onclick="createFolder('writing')">📁</button>
+      <h3 class="section-header" draggable="true" data-section="writing">
+        <button type="button" class="section-toggle" onclick="toggleSectionFold('writing')" aria-expanded="true" aria-label="Fold or unfold Writing"><svg class="icon fold-icon" aria-hidden="true"><use href="#i-chevron-down"/></svg><span>Writing</span></button>
+        <button type="button" class="icon-btn" onclick="createNew('writing')" data-tip="New file" aria-label="New file"><svg class="icon" aria-hidden="true"><use href="#i-file-plus"/></svg></button>
+        <button type="button" class="icon-btn" onclick="createFolder('writing')" data-tip="New folder" aria-label="New folder"><svg class="icon" aria-hidden="true"><use href="#i-folder-plus"/></svg></button>
+        <button type="button" class="icon-btn sort-btn tip-end" data-sort-section="writing" onclick="cycleSort('writing')" data-tip="Sort: My order" aria-label="Sort: My order"><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-down"/></svg></button>
       </h3>
       <div id="writingList"></div>
     </div>
@@ -98,13 +99,16 @@
 <!-- ===================== RIGHT PANEL: WORKSPACE ===================== -->
 <div class="right">
   <!-- ---------- TITLE INPUT ---------- -->
-  <input id="titleInput" placeholder="Title..." />
+  <div class="title-row">
+    <input id="titleInput" placeholder="Title..." />
+    <button type="button" id="closeDocBtn" class="icon-btn ghost-btn tip-end" onclick="closeDocument()" data-tip="Close document" aria-label="Close document"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
   <!-- ---------- FORMATTING BAR ---------- -->
   <div class="formatting">
-    <button onclick="wrapSelection('**')"><b>B</b></button>
-    <button onclick="wrapSelection('*')"><i>I</i></button>
-    <button onclick="insertPrefix('## ')">H2</button>
-    <button onclick="insertPrefix('- ')">•</button>
+    <button type="button" class="icon-btn md-tool" onclick="wrapSelection('**')" data-tip="Bold" aria-label="Bold"><svg class="icon" aria-hidden="true"><use href="#i-bold"/></svg></button>
+    <button type="button" class="icon-btn md-tool" onclick="wrapSelection('*')" data-tip="Italic" aria-label="Italic"><svg class="icon" aria-hidden="true"><use href="#i-italic"/></svg></button>
+    <button type="button" class="icon-btn md-tool" onclick="insertPrefix('## ')" data-tip="Heading" aria-label="Heading"><svg class="icon" aria-hidden="true"><use href="#i-heading-2"/></svg></button>
+    <button type="button" class="icon-btn md-tool" onclick="insertPrefix('- ')" data-tip="Bullet list" aria-label="Bullet list"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg></button>
 
     <select id="fontSelect" onchange="changeEditorFont(this.value)">
       <option value="Georgia">Georgia</option>
@@ -125,10 +129,53 @@
       <option value="17px">17</option>
       <option value="18px">18</option>
     </select>
+
+    <!-- Shown when the toolbar runs out of room; lists the buttons tucked away -->
+    <button type="button" class="icon-btn toolbar-more hidden" onclick="openOverflowMenu(this, 'formatting')" data-tip="More tools" aria-label="More tools"><svg class="icon" aria-hidden="true"><use href="#i-ellipsis"/></svg></button>
+    <button type="button" id="previewToggle" class="icon-btn tip-end" onclick="togglePreview()" data-tip="Preview (⌘E)" aria-label="Preview" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg></button>
+
+    <button type="button" id="zenToggle" class="icon-btn tip-end" onclick="toggleZen()" data-tip="Zen mode (⌘⇧F)" aria-label="Zen mode" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-maximize-2"/></svg></button>
+  </div>
+
+  <!-- Find and replace in the open document (⌘F, ⌘⇧H) -->
+  <div id="findBar" class="find-bar hidden" role="search" aria-label="Find in document">
+    <div class="find-row">
+      <button type="button" id="replaceToggle" class="icon-btn ghost-btn" onclick="setReplaceRow(document.getElementById('replaceRow').classList.contains('hidden'))" data-tip="Replace (⌘⇧H)" aria-label="Show replace" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
+      <label class="find-field"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="findInput" type="text" placeholder="Find" aria-label="Find" autocomplete="off" spellcheck="false" /></label>
+      <span id="findCount" class="find-count" aria-live="polite"></span>
+      <button type="button" class="icon-btn ghost-btn" onclick="findStep(-1)" data-tip="Previous (⇧↵)" aria-label="Previous match"><svg class="icon" aria-hidden="true"><use href="#i-chevron-up"/></svg></button>
+      <button type="button" class="icon-btn ghost-btn" onclick="findStep(1)" data-tip="Next (↵)" aria-label="Next match"><svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></button>
+      <button type="button" id="findCase" class="icon-btn ghost-btn find-toggle" onclick="toggleFindOption('matchCase')" data-tip="Match case" aria-label="Match case" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-case-sensitive"/></svg></button>
+      <button type="button" id="findWord" class="icon-btn ghost-btn find-toggle" onclick="toggleFindOption('wholeWord')" data-tip="Whole word" aria-label="Whole word" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-whole-word"/></svg></button>
+      <button type="button" class="link-btn find-all" onclick="openProjectSearch(findInput.value)">Search all documents…</button>
+      <button type="button" class="icon-btn ghost-btn tip-end find-close" onclick="closeFindBar()" data-tip="Close (Esc)" aria-label="Close find"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div id="replaceRow" class="find-row find-replace hidden">
+      <label class="find-field"><input id="replaceInput" type="text" placeholder="Replace with" aria-label="Replace with" autocomplete="off" spellcheck="false" /></label>
+      <button type="button" onclick="replaceCurrent()">Replace</button>
+      <button type="button" onclick="replaceAllInDocument()">Replace all</button>
+    </div>
   </div>
 
   <!-- ---------- MAIN EDITOR ---------- -->
   <textarea id="editor"></textarea>
+  <!-- Rendered Markdown view; shown instead of the editor in preview mode -->
+  <div id="preview" class="markdown-preview hidden" title="Double-click to edit"></div>
+  <!-- Shown instead of the title, toolbar, editor, and AI dock when no file is open -->
+  <div id="emptyState" class="empty-state">
+    <svg class="icon empty-state-icon" aria-hidden="true"><use href="#i-feather"/></svg>
+    <h2>No document open</h2>
+    <p>Choose a file in the sidebar, or start a new one.</p>
+    <div class="empty-state-actions">
+      <button type="button" class="primary-btn" onclick="createNew('writing')">
+        <svg class="icon" aria-hidden="true"><use href="#i-file-plus"/></svg> New writing file
+      </button>
+      <button type="button" onclick="createNew('background')">
+        <svg class="icon" aria-hidden="true"><use href="#i-file-plus"/></svg> New background note
+      </button>
+    </div>
+    <p class="empty-state-hint">⌘\ shows or hides the sidebar · ⌘⌥\ opens AI setup</p>
+  </div>
   <!-- ---------- AI CONTROL PANEL ---------- -->
   <div class="bottom">
     <!-- Prompt Input -->
@@ -136,115 +183,311 @@
 
     <!-- Controls + Status -->
     <div class="controls">
-      
-      <div class="footer-status">
-        <div id="tokenMeter">🟢 0 / 128000</div>
-        <div id="wordCount">0 words</div>
-      </div>
+
+      <!-- What the AI will get; opens the AI setup panel -->
+      <button type="button" id="aiSummaryChip" class="ai-chip tip-up tip-start" onclick="toggleAiPanel()" data-tip="AI setup (⌘⌥\)" aria-label="AI setup" aria-expanded="false">
+        <svg class="icon" aria-hidden="true"><use href="#i-sliders-horizontal"/></svg>
+        <span id="aiSummaryText">No rules · No prompt</span>
+      </button>
 
       <div class="footer-actions">
         <select id="footerModelName" aria-label="Active model">
           <option value="">-- Select Model --</option>
         </select>
 
-        <button type="button" onclick="generate()">Generate</button>
-        <button type="button" id="stopGenerateBtn" onclick="stopGeneration()" disabled>⏹ Stop</button>
-        <button type="button" id="undoGenerateBtn" onclick="undoLastGeneration()" disabled>↩ Undo</button>
-        <button type="button" onclick="saveCurrentFile()">Save</button>
-        <button type="button" onclick="clearPrompt()">ClearPrompt</button>
+        <button type="button" class="icon-btn primary-btn tip-up" onclick="generate()" data-tip="Generate (⌘↵)" aria-label="Generate (⌘↵)" id="generateBtn"><svg class="icon" aria-hidden="true"><use href="#i-sparkles"/></svg></button>
+        <button type="button" class="icon-btn tip-up" onclick="stopGeneration()" data-tip="Stop (Esc)" aria-label="Stop (Esc)" id="stopGenerateBtn" disabled><svg class="icon" aria-hidden="true"><use href="#i-square"/></svg></button>
+        <button type="button" class="icon-btn tip-up" onclick="undoLastGeneration()" data-tip="Undo last generation" aria-label="Undo last generation" id="undoGenerateBtn" disabled><svg class="icon" aria-hidden="true"><use href="#i-undo-2"/></svg></button>
+        <button type="button" class="icon-btn tip-up" onclick="openRequestPreview()" data-tip="Preview AI request" aria-label="Preview AI request" id="previewRequestBtn"><svg class="icon" aria-hidden="true"><use href="#i-scan-eye"/></svg></button>
+        <button type="button" class="icon-btn tip-up" onclick="saveCurrentFile()" data-tip="Save (⌘S)" aria-label="Save (⌘S)"><svg class="icon" aria-hidden="true"><use href="#i-save"/></svg></button>
+        <button type="button" class="icon-btn tip-up tip-end" onclick="clearPrompt()" data-tip="Clear instruction" aria-label="Clear instruction"><svg class="icon" aria-hidden="true"><use href="#i-eraser"/></svg></button>
+        <button type="button" class="icon-btn tip-up tip-end toolbar-more hidden" onclick="openOverflowMenu(this, 'actions')" data-tip="More actions" aria-label="More actions"><svg class="icon" aria-hidden="true"><use href="#i-ellipsis"/></svg></button>
       </div>
 
-      <div id="loadingIndicator" style="display:none;">⏳ Thinking...</div>
+      <div id="loadingIndicator" style="display:none;"><svg class="icon" aria-hidden="true"><use href="#i-loader-circle"/></svg> Thinking…</div>
     </div>
   </div>
 </div>
 
-</div>
-
-
-<!-- ===================== SETTINGS MODAL ===================== -->
-<div id="settingsModal" class="modal hidden">
-
-  <div class="modal-content">
-
-
-  <!-- ===================== MAIN SETTINGS VIEW ===================== -->
-  <div id="settingsMainLayout">
-
-    <div id="settingsMainView">
-      <h2>Settings</h2>
-
-      <div id="settingsControls">
-
-        <!-- Model Selection section -->
-        <div class="settings-section">
-          <div class="models-header">
-            <h2>Model Selection</h2>
-            <button type="button" onclick="openModelsPanel()">
-              Manage Models
-            </button>
-          </div>
-          <select id="modelName">
-            <option value="">-- Select Model --</option>
-          </select>
-        </div>
-
-        <!-- Visual Layout section -->
-        <div class="settings-section">
-          <div class="models-header">
-            <h2>Visual Layout</h2>
-            <button type="button" onclick="openVisualPanel()">
-              Manage Visual
-            </button>
-          </div>
-        </div>
-
-        <!-- OpenRouter API Key section -->
-        <div class="settings-section">
-          <h2>OpenRouter API Key</h2>
-          <input id="apiKey" type="password" placeholder="sk-..." />
-          <div id="apiKeyStatus" class="settings-note"></div>
-        </div>
-      </div>
-
-      <div class="modal-actions">
-        <button onclick="saveSettings()">Save</button>
-        <button onclick="closeSettings(true)">Cancel</button>
-      </div>
+<!-- ===================== RIGHT PANEL: AI SETUP (System + Prompts) ===================== -->
+<aside id="aiPanel" class="ai-panel" aria-label="AI setup">
+  <div class="resize-handle" data-resize="ai" role="separator" aria-orientation="vertical" aria-label="Resize AI setup" title="Drag to resize · double-click to reset"></div>
+  <div class="ai-panel-header">
+    <h2>AI setup</h2>
+    <button type="button" class="icon-btn ghost-btn tip-end" onclick="setAiPanelOpen(false)" data-tip="Close (⌘⌥\)" aria-label="Close AI setup"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="section-group ai-group">
+    <div class="section" data-weight="system">
+      <h3 class="section-header" draggable="true" data-section="system">
+        <button type="button" class="section-toggle" onclick="toggleSectionFold('system')" aria-expanded="true" aria-label="Fold or unfold System"><svg class="icon fold-icon" aria-hidden="true"><use href="#i-chevron-down"/></svg><span>System</span></button>
+        <button type="button" class="icon-btn" onclick="createNew('system')" data-tip="New file" aria-label="New file"><svg class="icon" aria-hidden="true"><use href="#i-file-plus"/></svg></button>
+        <button type="button" class="icon-btn" onclick="createFolder('system')" data-tip="New folder" aria-label="New folder"><svg class="icon" aria-hidden="true"><use href="#i-folder-plus"/></svg></button>
+        <button type="button" class="icon-btn sort-btn tip-end" data-sort-section="system" onclick="cycleSort('system')" data-tip="Sort: My order" aria-label="Sort: My order"><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-down"/></svg></button>
+      </h3>
+      <div id="systemList"></div>
     </div>
 
-    <!-- ABOUT -->
-    <div id="settingsAboutView">
-      <img
-        src="/static/apple-touch-icon.png"
-        alt="SJB Writer"
-        class="about-app-icon"
-      />
-      <h3>SJB Writer</h3>
-      <p id="aboutVersion">Version 0.9.0</p>
-      <p class="about-description">
-        A local-first writing environment.
-      </p>
+    <div class="section" data-weight="prompts">
+      <h3 class="section-header" draggable="true" data-section="prompts">
+        <button type="button" class="section-toggle" onclick="toggleSectionFold('prompts')" aria-expanded="true" aria-label="Fold or unfold Prompts"><svg class="icon fold-icon" aria-hidden="true"><use href="#i-chevron-down"/></svg><span>Prompts</span></button>
+        <button type="button" class="icon-btn" onclick="createNew('prompts')" data-tip="New file" aria-label="New file"><svg class="icon" aria-hidden="true"><use href="#i-file-plus"/></svg></button>
+        <button type="button" class="icon-btn" onclick="createFolder('prompts')" data-tip="New folder" aria-label="New folder"><svg class="icon" aria-hidden="true"><use href="#i-folder-plus"/></svg></button>
+        <button type="button" class="icon-btn sort-btn tip-end" data-sort-section="prompts" onclick="cycleSort('prompts')" data-tip="Sort: My order" aria-label="Sort: My order"><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-down"/></svg></button>
+      </h3>
+      <div id="promptsList"></div>
     </div>
   </div>
 
-    <!-- ===================== VISUAL LAYOUT PANEL ===================== -->
-    <div id="settingsVisualView" class="hidden">
+  <!-- Generation settings: saved as you change them -->
+  <details id="aiGeneration" class="ai-markers ai-generation">
+    <summary>
+      <svg class="icon fold-icon" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+      <span>Generation</span>
+    </summary>
+    <div class="ai-markers-body">
+      <div class="generation-row">
+        <label for="temperatureInput">Temperature</label>
+        <span class="generation-value">
+          <span id="temperatureValue">0.7</span>
+          <button type="button" class="link-btn" onclick="resetTemperature()" title="Reset to 0.7">Reset</button>
+        </span>
+      </div>
+      <input type="range" id="temperatureInput" min="0" max="2" step="0.1" value="0.7" />
+      <div class="generation-scale"><span>Focused</span><span>Varied</span></div>
+
+      <label for="reasoningSelect">Reasoning</label>
+      <select id="reasoningSelect">
+        <option value="default">Model default</option>
+        <option value="none">Off</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <p class="ai-markers-note" id="reasoningNote">Models that cannot reason ignore this.</p>
+
+      <div class="generation-row max-length">
+        <label for="maxTokensInput">Max reply length</label>
+        <input type="number" id="maxTokensInput" min="1" step="100" placeholder="No limit" />
+      </div>
+      <p class="ai-markers-note" id="maxTokensNote">In tokens (1,000 is about 750 words). Reasoning counts too. Leave it empty for no limit.</p>
+
+      <label class="ai-markers-check generation-web">
+        <input type="checkbox" id="webSearchToggle" />
+        Search the web
+      </label>
+      <div class="generation-row web-max">
+        <label for="webMaxResults">Max websites</label>
+        <input type="number" id="webMaxResults" min="1" max="10" step="1" value="5" />
+      </div>
+      <p class="ai-markers-note">OpenRouter models only. Each search costs about $0.007, even on free models.</p>
+    </div>
+  </details>
+
+  <!-- AI output markers: saved as you type -->
+  <details id="aiMarkers" class="ai-markers">
+    <summary>
+      <svg class="icon fold-icon" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+      <span>Output markers</span>
+    </summary>
+    <div class="ai-markers-body">
+      <label class="ai-markers-check">
+        <input type="checkbox" id="showOutputMarkers" />
+        Mark where AI text begins and ends
+      </label>
+      <label for="outputMarkerBefore">Before AI text</label>
+      <textarea id="outputMarkerBefore" rows="3"></textarea>
+      <label for="outputMarkerAfter">After AI text</label>
+      <textarea id="outputMarkerAfter" rows="3"></textarea>
+      <p class="ai-markers-note">"After" shows only when the AI writes at the start or middle of your text. Leave a box empty to skip it.</p>
+    </div>
+  </details>
+</aside>
+
+</div>
+
+<!-- ===================== STATUS BAR ===================== -->
+<footer id="statusBar" class="status-bar">
+  <div class="status-left">
+    <span id="statusLocation"></span>
+    <span id="saveStatus" class="save-status"></span>
+  </div>
+  <div class="status-right">
+    <span id="wordCount">0 words</span>
+    <span id="dialoguePercent" class="tip-up" data-tip=""></span>
+    <span id="readingTime"></span>
+    <button type="button" id="tokenMeter" class="tip-up tip-end" data-level="ok" data-tip="Nothing to send yet" onclick="openRequestPreview()">AI request ≈ 0 tokens</button>
+  </div>
+</footer>
+
+<!-- ===================== VERSION HISTORY MODAL ===================== -->
+<div id="historyModal" class="modal hidden">
+  <div class="modal-content history-content">
+    <button type="button" class="icon-btn ghost-btn modal-close tip-end" onclick="closeHistory()" data-tip="Close (Esc)" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <h2>Version history</h2>
+    <div class="history-layout">
+      <div id="historyList" class="history-list"></div>
+      <div id="historyPreview" class="history-preview"></div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="historyRestoreBtn" class="primary-btn" onclick="restoreSelectedVersion()" disabled>
+        Restore this version
+      </button>
+      <button type="button" onclick="closeHistory()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== AI REQUEST PREVIEW MODAL ===================== -->
+<div id="requestModal" class="modal hidden">
+  <div class="modal-content request-content">
+    <button type="button" class="icon-btn ghost-btn modal-close tip-end" onclick="closeRequestPreview()" data-tip="Close (Esc)" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <h2>What the AI will see</h2>
+    <p id="requestSummary" class="trash-hint"></p>
+    <p id="requestCost" class="trash-hint request-cost"></p>
+    <div class="request-body">
+      <h3 class="request-label">Rules <span>system message, from your System files</span></h3>
+      <pre id="requestSystem" class="request-text"></pre>
+      <h3 class="request-label">Request <span>user message</span></h3>
+      <pre id="requestUser" class="request-text"></pre>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="request-copy" onclick="copyRequestPreview(this)">Copy</button>
+      <button type="button" onclick="closeRequestPreview()">Close</button>
+      <button type="button" class="primary-btn" onclick="closeRequestPreview(); generate();">Generate</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SEARCH AND REPLACE MODAL (project menu, find bar) ===================== -->
+<div id="searchModal" class="modal hidden">
+  <div class="modal-content search-content">
+    <button type="button" class="icon-btn ghost-btn modal-close tip-end" onclick="closeProjectSearch()" data-tip="Close (Esc)" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <h2>Search and replace</h2>
+    <div class="search-fields">
+      <label class="find-field"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="searchQuery" type="text" placeholder="Find" aria-label="Find" autocomplete="off" spellcheck="false" /></label>
+      <label class="find-field"><input id="searchReplacement" type="text" placeholder="Replace with" aria-label="Replace with" autocomplete="off" spellcheck="false" /></label>
+    </div>
+    <div class="search-options">
+      <label><input type="checkbox" id="searchMatchCase" /> Match case</label>
+      <label><input type="checkbox" id="searchWholeWord" /> Whole word</label>
+      <span class="search-where">Look in:</span>
+      <label><input type="checkbox" name="searchSection" value="writing" checked /> Writing</label>
+      <label><input type="checkbox" name="searchSection" value="background" checked /> Background</label>
+      <label><input type="checkbox" name="searchSection" value="system" /> System</label>
+      <label><input type="checkbox" name="searchSection" value="prompts" /> Prompts</label>
+    </div>
+    <p id="searchSummary" class="import-summary"></p>
+    <div id="searchResults" class="search-results"></div>
+    <div class="modal-actions">
+      <button type="button" onclick="closeProjectSearch()">Close</button>
+      <button type="button" id="searchReplaceBtn" class="primary-btn" onclick="replaceInProject(this)" disabled>Replace</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== IMPORT MODAL (project menu) ===================== -->
+<div id="importModal" class="modal hidden">
+  <div class="modal-content import-content">
+    <button type="button" class="icon-btn ghost-btn modal-close tip-end" onclick="closeImport()" data-tip="Close (Esc)" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <h2>Import</h2>
+    <p class="trash-hint">Markdown, plain text, and Word (.docx) files. You see what will come in before anything is added, and your original files are never changed.</p>
+    <div class="import-pick">
+      <button type="button" onclick="pickImport('files')">Choose files…</button>
+      <button type="button" onclick="pickImport('folder')">Choose a folder…</button>
+      <input type="file" id="importFiles" multiple accept=".md,.markdown,.txt,.docx" hidden />
+      <input type="file" id="importFolder" webkitdirectory multiple hidden />
+    </div>
+    <div id="importPreview" class="import-preview hidden">
+      <p id="importSummary" class="import-summary"></p>
+      <div id="importList" class="import-list"></div>
+      <fieldset class="export-group">
+        <legend>Import into</legend>
+        <label><input type="radio" name="importDest" value="project" checked /> <span id="importThisProject">This project</span></label>
+        <label class="import-new"><input type="radio" name="importDest" value="new" /> A new project named <input type="text" id="importProjectName" aria-label="New project name" /></label>
+      </fieldset>
+      <fieldset class="export-group">
+        <legend>Section</legend>
+        <label><input type="radio" name="importSection" value="writing" checked /> Writing</label>
+        <label><input type="radio" name="importSection" value="background" /> Background</label>
+      </fieldset>
+      <label class="export-check" id="importKeepRow"><input type="checkbox" id="importKeep" checked /> Keep the folders as sidebar folders</label>
+    </div>
+    <div class="modal-actions">
+      <button type="button" onclick="closeImport()">Cancel</button>
+      <button type="button" id="importRun" class="primary-btn" onclick="runImport(this)" disabled>Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== EXPORT MANUSCRIPT MODAL (project menu) ===================== -->
+<div id="exportModal" class="modal hidden">
+  <div class="modal-content export-content">
+    <button type="button" class="icon-btn ghost-btn modal-close tip-end" onclick="closeExport()" data-tip="Close (Esc)" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <h2>Export manuscript</h2>
+    <p id="exportHint" class="trash-hint"></p>
+    <fieldset class="export-group">
+      <legend>Format</legend>
+      <label><input type="radio" name="exportFormat" value="docx" checked /> Word (.docx)</label>
+      <label><input type="radio" name="exportFormat" value="md" /> Markdown (.md)</label>
+    </fieldset>
+    <fieldset class="export-group">
+      <legend>Documents</legend>
+      <label><input type="radio" name="exportWhich" value="all" checked /> All of Writing</label>
+      <label><input type="radio" name="exportWhich" value="ticked" id="exportTicked" /> <span>Only ticked documents (<span id="exportTickedCount">0</span>)</span></label>
+    </fieldset>
+    <label class="export-check"><input type="checkbox" id="exportHeadings" checked /> Folder and document titles as headings</label>
+    <label class="export-check"><input type="checkbox" id="exportPageBreaks" checked /> Each document starts on a new page (Word)</label>
+    <div class="modal-actions">
+      <button type="button" onclick="closeExport()">Cancel</button>
+      <button type="button" class="primary-btn" onclick="runExport(this)">Export</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TRASH MODAL (project menu) ===================== -->
+<div id="trashModal" class="modal hidden">
+  <div class="modal-content trash-content">
+    <button type="button" class="icon-btn ghost-btn modal-close tip-end" onclick="closeTrash()" data-tip="Close (Esc)" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <h2>Trash</h2>
+    <p id="trashHint" class="trash-hint"></p>
+    <div id="trashList" class="trash-list"></div>
+    <div class="modal-actions">
+      <button type="button" id="trashEmptyBtn" class="danger-btn" onclick="emptyTrash()" disabled>Empty trash</button>
+      <button type="button" onclick="closeTrash()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Exit button shown only in zen mode -->
+<button type="button" id="zenExit" class="icon-btn ghost-btn zen-exit tip-end" onclick="setZen(false)" data-tip="Exit zen (Esc)" aria-label="Exit zen mode"><svg class="icon" aria-hidden="true"><use href="#i-minimize-2"/></svg></button>
+
+
+<!-- ===================== VISUAL LAYOUT MODAL (top bar easel) ===================== -->
+<div id="visualModal" class="modal hidden">
+  <div class="modal-content visual-content">
+    <button type="button" class="icon-btn ghost-btn modal-close tip-end" onclick="closeVisualPanel()" data-tip="Close (Esc)" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div id="settingsVisualView">
       <h2>Visual Layout</h2>
 
-      <div class="panel-actions">
-        <button onclick="closeVisualPanel()">← Back</button>
+      <div class="settings-section">
+        <label for="themeModeSelect">Mode</label>
+        <select id="themeModeSelect" onchange="previewAppearance()">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="system">Match system</option>
+        </select>
       </div>
 
       <div class="settings-section">
-        <label>Theme</label>
-       <select id="themeSelect">
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-          <option value="crimson">Crimson</option>
-          <option value="dark-stellar">Dark Stellar</option>
-          <option value="light-stellar">Light Stellar</option>
-        </select>
+        <label>Accent color</label>
+        <div id="accentSwatches" class="accent-swatches" role="radiogroup" aria-label="Accent color">
+          <button type="button" class="accent-swatch" role="radio" data-accent="blue" style="--swatch: #2563eb" data-tip="Blue" aria-label="Blue" onclick="pickAccent('blue')"></button>
+          <button type="button" class="accent-swatch" role="radio" data-accent="indigo" style="--swatch: #4f46e5" data-tip="Indigo" aria-label="Indigo" onclick="pickAccent('indigo')"></button>
+          <button type="button" class="accent-swatch" role="radio" data-accent="teal" style="--swatch: #0d9488" data-tip="Teal" aria-label="Teal" onclick="pickAccent('teal')"></button>
+          <button type="button" class="accent-swatch" role="radio" data-accent="crimson" style="--swatch: #dc2626" data-tip="Crimson" aria-label="Crimson" onclick="pickAccent('crimson')"></button>
+          <button type="button" class="accent-swatch" role="radio" data-accent="amber" style="--swatch: #d97706" data-tip="Amber" aria-label="Amber" onclick="pickAccent('amber')"></button>
+          <button type="button" class="accent-swatch" role="radio" data-accent="violet" style="--swatch: #7c3aed" data-tip="Violet" aria-label="Violet" onclick="pickAccent('violet')"></button>
+        </div>
       </div>
 
       <div class="settings-section">
@@ -303,6 +546,88 @@
         <button onclick="closeVisualPanel()">Cancel</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ===================== SETTINGS MODAL ===================== -->
+<div id="settingsModal" class="modal hidden">
+
+  <div class="modal-content">
+    <button type="button" class="icon-btn ghost-btn modal-close tip-end" onclick="closeSettings(true)" data-tip="Close (Esc)" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+
+
+  <!-- ===================== MAIN SETTINGS VIEW ===================== -->
+  <div id="settingsMainLayout">
+
+    <div id="settingsMainView">
+      <h2>Settings</h2>
+
+      <div id="settingsControls">
+
+        <!-- Model Selection section -->
+        <div class="settings-section">
+          <div class="models-header">
+            <h2>Model Selection</h2>
+            <button type="button" onclick="openModelsPanel()">
+              Manage Models
+            </button>
+          </div>
+          <select id="modelName">
+            <option value="">-- Select Model --</option>
+          </select>
+        </div>
+
+        <!-- AI on/off -->
+        <div class="settings-section">
+          <h2>AI features</h2>
+          <label class="settings-switch">
+            <input type="checkbox" id="aiEnabledToggle" />
+            Use AI features
+          </label>
+          <div class="settings-note">Turn off to use SJB Writer as a plain document editor. The AI setup, instruction box, and Generate are hidden; your AI settings are kept.</div>
+        </div>
+
+        <!-- Where the books live; acts at once (it has its own confirm) -->
+        <div class="settings-section">
+          <h2>Books folder</h2>
+          <div class="data-folder-row">
+            <code id="dataFolderPath" class="data-folder-path"></code>
+            <button type="button" id="dataFolderChoose" onclick="chooseDataFolder(this)">Choose…</button>
+          </div>
+          <div id="dataFolderNote" class="settings-note">Your prompts, system rules, and projects, as Markdown files. Pick a folder in your Obsidian vault to work on the same files there.</div>
+          <button type="button" id="dataFolderReset" class="link-btn data-folder-reset hidden" onclick="resetDataFolder()">Use the app folder again</button>
+        </div>
+
+        <!-- OpenRouter API Key section -->
+        <div class="settings-section">
+          <h2>OpenRouter API Key</h2>
+          <input id="apiKey" type="password" placeholder="sk-..." />
+          <div id="apiKeyStatus" class="settings-note"></div>
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+        <button onclick="saveSettings()">Save</button>
+        <button onclick="closeSettings(true)">Cancel</button>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div id="settingsAboutView">
+      <img
+        src="{{ url_for('static', filename='branding/icon-512.png') }}"
+        alt="SJB Writer"
+        class="about-app-icon"
+      />
+      <h3>SJB Writer</h3>
+      <p id="aboutVersion">Version {{ app_version }}</p>
+      <p class="about-description">
+        A local-first writing environment.
+      </p>
+    </div>
+  </div>
+
 
     <!-- ===================== MODELS PANEL ===================== -->
     <div id="settingsModelsView" class="hidden">
@@ -319,7 +644,14 @@
           + Add Model
         </button>
 
+        <button type="button" onclick="checkOpenRouterModels(this)" title="Compare your models with OpenRouter's current list">
+          Check OpenRouter
+        </button>
+
       </div>
+
+      <!-- Result of the last OpenRouter check -->
+      <div id="modelCheckSummary" class="model-check hidden"></div>
 
       <div id="modelLabelFilters"></div>
       <input
@@ -414,7 +746,33 @@
 
 <!-- ===================== SCRIPT ENTRY ===================== -->
 <!-- ✅ KEEP SCRIPT HERE -->
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+<!-- Markdown preview: marked (MIT) renders, DOMPurify (Apache-2.0/MPL-2.0) sanitizes -->
+<!-- ===================== QUESTION WINDOW (askText / askConfirm) ===================== -->
+<!-- Last in the page, so it sits on top of any other open window -->
+<div id="askModal" class="modal ask-modal hidden">
+  <div class="modal-content ask-content" role="dialog" aria-modal="true" aria-labelledby="askTitle">
+    <h2 id="askTitle"></h2>
+    <p id="askMessage" class="ask-message hidden"></p>
+    <input id="askInput" type="text" class="ask-input hidden" autocomplete="off" />
+    <div class="modal-actions">
+      <button type="button" id="askCancel" onclick="finishAsk(null)">Cancel</button>
+      <button type="button" id="askOk" class="primary-btn" onclick="answerAsk()">OK</button>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='vendor/marked.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/purify.min.js') }}"></script>
+<!-- The page script, in load order (plain scripts sharing one global scope; startup last) -->
+<script src="{{ url_for('static', filename='js/core.js') }}"></script>
+<script src="{{ url_for('static', filename='js/appearance.js') }}"></script>
+<script src="{{ url_for('static', filename='js/models.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+<script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+<script src="{{ url_for('static', filename='js/ai.js') }}"></script>
+<script src="{{ url_for('static', filename='js/projects.js') }}"></script>
+<script src="{{ url_for('static', filename='js/windows.js') }}"></script>
+<script src="{{ url_for('static', filename='js/startup.js') }}"></script>
 
 </body>
 </html>

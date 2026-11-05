@@ -6,7 +6,7 @@
       "items": [
         {
           "type": "file",
-          "filename": "setup.json",
+          "filename": "setup.md",
           "title": "Setup",
           "wordCount": 429
         }
@@ -31,19 +31,19 @@
       "items": [
         {
           "type": "file",
-          "filename": "2-1-look-around.json",
+          "filename": "2-1-look-around.md",
           "title": "2.1 - Look Around",
           "wordCount": 10
         },
         {
           "type": "file",
-          "filename": "2-2-create-your-first-writing-file.json",
+          "filename": "2-2-create-your-first-writing-file.md",
           "title": "2.2 \u2013 Create Your First Writing File",
           "wordCount": 14
         },
         {
           "type": "file",
-          "filename": "2-3-the-gear-menu.json",
+          "filename": "2-3-the-gear-menu.md",
           "title": "2.3 \u2013 The Gear Menu",
           "wordCount": 14
         }
@@ -52,6 +52,6 @@
   ],
   "last_opened_project": {
     "section": "background",
-    "filename": "setup.json"
+    "filename": "setup.md"
   }
 }
