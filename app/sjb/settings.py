@@ -8,8 +8,8 @@ from flask import request, jsonify, Blueprint
 
 from sjb import paths
 from sjb.paths import (
-    APP_ROOT, APP_STATE, DATA_FOLDER_FILE, GLOBAL_DIR, saved_data_folder,
-    set_data_root,
+    APP_STATE, DATA_FOLDER_FILE, DEFAULT_DATA_ROOT, GLOBAL_DIR,
+    saved_data_folder, set_data_root,
 )
 from sjb.storage import save_json
 from sjb.library import ensure_structure, load_app_state, write_app_state
@@ -84,7 +84,7 @@ def data_folder_status():
     saved = saved_data_folder()
     return {
         "path": paths.DATA_ROOT,
-        "isAppFolder": paths.DATA_ROOT == APP_ROOT,
+        "isAppFolder": paths.DATA_ROOT == DEFAULT_DATA_ROOT,
         "missing": saved if saved and not os.path.isdir(saved) else None
     }
 
@@ -136,8 +136,8 @@ def api_set_data_folder():
             return jsonify({"error": "The app cannot write to that folder."}), 400
         if inside(target, paths.PROJECTS_DIR) or inside(target, paths.LIBRARY_DIR):
             return jsonify({"error": "Pick a folder outside your current books."}), 400
-        if os.path.realpath(target) == os.path.realpath(APP_ROOT):
-            target = None   # the app folder is the default
+        if os.path.realpath(target) == os.path.realpath(DEFAULT_DATA_ROOT):
+            target = None   # the default Books folder
 
     if target and copy:
         if has_books(target):
@@ -148,7 +148,7 @@ def api_set_data_folder():
         save_json(DATA_FOLDER_FILE, {"path": target})
     elif os.path.exists(DATA_FOLDER_FILE):
         os.remove(DATA_FOLDER_FILE)
-    set_data_root(target or APP_ROOT)
+    set_data_root(target or DEFAULT_DATA_ROOT)
 
     # Open a project that exists in the new place
     app_state = load_app_state()

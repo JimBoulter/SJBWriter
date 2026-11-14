@@ -28,7 +28,7 @@ That's all you need for now. You can build out your workspace as your project de
 
 Next up is **Getting Started**, where we will walk through the editor's basic navigation, explain what each pane on the left is there to do, and show how the pieces fit together.
 
-You'll notice that this file, Setup, is named at the top of the Editor and highlighted on the left in the Project/Background panel. We'll talk more about both in the next lesson.
+You'll notice that this file, Setup, is named at the top of this Editor section and highlighted on the left in the Background panel. We'll talk more about both in the next lesson.
 
 For now, look under Background for Writing. Click the arrow beside the 2 - Getting Started folder to expand it, then select 2.1 - Look Around to continue the tutorial.
 

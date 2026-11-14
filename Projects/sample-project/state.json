@@ -8,7 +8,7 @@
           "type": "file",
           "filename": "setup.md",
           "title": "Setup",
-          "wordCount": 429
+          "wordCount": 430
         }
       ],
       "title": "1 - Quick Setup",
@@ -24,30 +24,30 @@
   ],
   "writing": [
     {
-      "type": "folder",
-      "id": "2-getting-started",
-      "title": "2 - Getting Started",
       "collapsed": false,
+      "id": "2-getting-started",
       "items": [
         {
-          "type": "file",
           "filename": "2-1-look-around.md",
           "title": "2.1 - Look Around",
+          "type": "file",
           "wordCount": 10
         },
         {
-          "type": "file",
           "filename": "2-2-create-your-first-writing-file.md",
           "title": "2.2 \u2013 Create Your First Writing File",
+          "type": "file",
           "wordCount": 14
         },
         {
-          "type": "file",
           "filename": "2-3-the-gear-menu.md",
           "title": "2.3 \u2013 The Gear Menu",
+          "type": "file",
           "wordCount": 14
         }
-      ]
+      ],
+      "title": "2 - Getting Started",
+      "type": "folder"
     }
   ],
   "last_opened_project": {

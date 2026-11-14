@@ -1,11 +1,12 @@
 """Import documents and folders: Markdown, plain text, and Word (.docx), with a preview first."""
-
+import json
 import io
 import os
 import re
 import zipfile
 import xml.etree.ElementTree as ET
 from flask import request, jsonify, Blueprint
+from markdownify import markdownify
 
 from sjb import paths
 from sjb.storage import count_words, doc_name, header_title, load_json, save_json, slugify, split_front_matter, write_doc
@@ -216,6 +217,11 @@ def spaced(text):
         return add_paragraph_breaks(text), True
     return text, False
 
+def clean_import_html(text):
+    """Convert embedded HTML in imported Markdown to clean Markdown."""
+    if re.search(r"<(?:h[1-6]|p|div|br|em|strong|b|i|ul|ol|li|blockquote)\b", text, re.I):
+        return markdownify(text, heading_style="ATX").strip()
+    return text
 
 def read_upload(filename, data):
     """(title or None, text, extra header lines, spacing added?) for one supported file."""
@@ -227,11 +233,233 @@ def read_upload(filename, data):
     if ext in (".md", ".markdown"):
         lines, body = split_front_matter(text)
         extra = [l for l in lines if l.partition(":")[0].strip() != "title"]
+        body = clean_import_html(body)
         body, added = spaced(body)
         return header_title(lines), body, extra, added
     text, added = spaced(text)
     return None, text, [], added
 
+# ----- RAPTORWRITE PROJECT EXPORTS -----
+
+def inline_markdown(nodes):
+    """Convert RaptorWrite inline text nodes to Markdown."""
+    out = []
+    for node in nodes or []:
+        if node.get("type") != "text":
+            continue
+
+        text = node.get("text", "")
+        marks = node.get("marks", [])
+        styles = node.get("styles", {})
+
+        bold = styles.get("bold", False) or any(m.get("type") == "bold" for m in marks)
+        italic = styles.get("italic", False) or any(m.get("type") == "italic" for m in marks)
+        strike = styles.get("strike", False) or any(m.get("type") == "strike" for m in marks)
+
+        if bold and italic:
+            text = f"***{text}***"
+        elif bold:
+            text = f"**{text}**"
+        elif italic:
+            text = f"*{text}*"
+
+        if strike:
+            text = f"~~{text}~~"
+
+        out.append(text)
+
+    return "".join(out)
+
+
+def legacy_blocks_to_markdown(blocks, depth=0):
+    """Convert RaptorWrite's legacy block-array editor format."""
+    output = []
+
+    for block in blocks or []:
+        kind = block.get("type", "")
+        text = inline_markdown(block.get("content", []))
+        children = block.get("children", [])
+
+        if kind == "heading":
+            level = max(1, min(6, int(block.get("props", {}).get("level", 1))))
+            line = f"{'#' * level} {text}"
+        elif kind == "bulletListItem":
+            line = "  " * depth + "- " + text
+        elif kind == "numberedListItem":
+            line = "  " * depth + "1. " + text
+        elif kind == "paragraph":
+            line = text
+        elif kind == "quote":
+            line = "> " + text
+        elif kind == "codeBlock":
+            line = "```\n" + text + "\n```"
+        else:
+            line = text
+
+        if line.strip():
+            output.append(line)
+
+        if children:
+            nested = legacy_blocks_to_markdown(children, depth + 1)
+            if nested:
+                output.append(nested)
+
+    return "\n\n".join(output)
+
+
+def prosemirror_inline(node):
+    """Convert ProseMirror inline nodes, including marks and hard breaks."""
+    kind = node.get("type")
+
+    if kind == "text":
+        text = node.get("text", "")
+        marks = {mark.get("type") for mark in node.get("marks", [])}
+
+        if "bold" in marks:
+            text = f"**{text}**"
+        if "italic" in marks:
+            text = f"*{text}*"
+        if "strike" in marks:
+            text = f"~~{text}~~"
+        if "code" in marks:
+            text = f"`{text}`"
+        return text
+
+    if kind == "hardBreak":
+        return "  \n"
+
+    return ""
+
+
+def prosemirror_blocks(nodes):
+    """Convert ProseMirror block nodes to Markdown."""
+    output = []
+
+    for node in nodes or []:
+        kind = node.get("type")
+        children = node.get("content", [])
+
+        if kind == "paragraph":
+            text = "".join(prosemirror_inline(child) for child in children)
+            output.append(text)
+
+        elif kind == "heading":
+            level = max(1, min(6, int(node.get("attrs", {}).get("level", 1))))
+            text = "".join(prosemirror_inline(child) for child in children)
+            output.append(f"{'#' * level} {text}")
+
+        elif kind in ("bulletList", "orderedList"):
+            ordered = kind == "orderedList"
+            for index, item in enumerate(children, 1):
+                item_content = item.get("content", [])
+                parts = []
+                for child in item_content:
+                    if child.get("type") in ("paragraph", "heading"):
+                        parts.append("".join(
+                            prosemirror_inline(n) for n in child.get("content", [])
+                        ))
+                    else:
+                        parts.append("\n" + prosemirror_blocks([child]))
+                marker = f"{index}. " if ordered else "- "
+                output.append(marker + "\n".join(parts).replace("\n", "\n  "))
+
+        elif kind == "blockquote":
+            quoted = prosemirror_blocks(children)
+            output.append("\n".join("> " + line for line in quoted.splitlines()))
+
+        elif kind == "codeBlock":
+            text = "".join(prosemirror_inline(child) for child in children)
+            output.append("```\n" + text + "\n```")
+
+        elif kind == "horizontalRule":
+            output.append("---")
+
+        elif kind == "text":
+            output.append(prosemirror_inline(node))
+
+    return "\n\n".join(part for part in output if part.strip())
+
+
+def raptor_content_to_markdown(content):
+    """Convert either RaptorWrite editor format to Markdown."""
+    if isinstance(content, str):
+        try:
+            content = json.loads(content)
+        except (ValueError, TypeError):
+            return content
+
+    if isinstance(content, list):
+        return legacy_blocks_to_markdown(content)
+
+    if isinstance(content, dict):
+        if content.get("type") == "doc":
+            return prosemirror_blocks(content.get("content", []))
+        return prosemirror_blocks([content])
+
+    return ""
+
+
+def raptor_order(value):
+    try:
+        return int(value.get("order", 0))
+    except (TypeError, ValueError):
+        return 0
+
+
+def raptor_uploads(data):
+    """Convert a RaptorWrite project export into ordered virtual Markdown files."""
+    folders = data.get("folders", [])
+    by_id = {str(folder.get("id")): folder for folder in folders}
+
+    children = {}
+    for folder in folders:
+        parent_id = folder.get("parent_id")
+        children.setdefault(str(parent_id), []).append(folder)
+
+    for siblings in children.values():
+        siblings.sort(key=raptor_order)
+
+    manuscripts = [
+        folder for folder in folders
+        if folder.get("type") == "manuscript" and folder.get("parent_id") is None
+    ]
+
+    root = manuscripts[0] if manuscripts else None
+    root_id = str(root["id"]) if root else None
+
+    uploads = []
+
+    def add_documents(folder, folder_path):
+        docs = sorted(folder.get("documents", []), key=raptor_order)
+
+        for doc in docs:
+            title = (doc.get("title") or "Untitled").strip() or "Untitled"
+            content = raptor_content_to_markdown(doc.get("content"))
+
+            # Keep the original title in the filename while preventing path separators.
+            filename = re.sub(r'[\\/:*?"<>|]', "-", title).strip(" .") or "Untitled"
+            filename += ".md"
+
+            relative_path = "/".join(folder_path + [filename])
+            uploads.append((relative_path, content.encode("utf-8")))
+
+    def visit(folder, folder_path):
+        add_documents(folder, folder_path)
+
+        for child in children.get(str(folder.get("id")), []):
+            if child is root:
+                continue
+            visit(child, folder_path + [child.get("name") or "Folder"])
+
+    if root:
+        # The manuscript container is structural, not an imported folder.
+        visit(root, [])
+    else:
+        # No manuscript container: import top-level folders as ordinary folders.
+        for folder in children.get("None", []):
+            visit(folder, [folder.get("name") or "Folder"])
+
+    return (data.get("title") or "Imported").strip(), uploads
 
 # ----- THE PLAN: what an import would do -----
 
@@ -246,31 +474,56 @@ def clean_parts(path):
 
 
 def build_plan(uploads):
-    """uploads: [(relative path, bytes)]. Returns (root folder name or None, items, skipped)."""
+    """uploads: [(relative path, bytes)]. Returns root, items, skipped, project title."""
+    project_title = None
+
+    json_uploads = [
+        (path, data) for path, data in uploads
+        if os.path.splitext(path)[1].lower() == ".json"
+    ]
+
+    if json_uploads:
+        if len(uploads) != 1 or len(json_uploads) != 1:
+            raise ValueError("Import a RaptorWrite project export by itself.")
+
+        try:
+            export = json.loads(json_uploads[0][1].decode("utf-8-sig"))
+            project_title, uploads = raptor_uploads(export)
+        except (ValueError, TypeError, KeyError) as exc:
+            raise ValueError("That RaptorWrite project export could not be read.") from exc
+
     entries = [(clean_parts(path), data) for path, data in uploads]
     entries = [(parts, data) for parts, data in entries if parts]
-    # Hidden files and folders (.DS_Store, .obsidian, .trash) are left out quietly
-    entries = [(parts, data) for parts, data in entries if not any(p.startswith(".") for p in parts)]
-    entries.sort(key=lambda e: natural_key("/".join(e[0])))
+    entries = [(parts, data) for parts, data in entries
+               if not any(p.startswith(".") for p in parts)]
+
+    # RaptorWrite files are already in document order. Other imports are sorted naturally.
+    if project_title is None:
+        entries.sort(key=lambda e: natural_key("/".join(e[0])))
 
     firsts = {parts[0] for parts, _ in entries}
-    root = next(iter(firsts)) if len(firsts) == 1 and all(len(parts) > 1 for parts, _ in entries) else None
+    root = next(iter(firsts)) if len(firsts) == 1 and all(
+        len(parts) > 1 for parts, _ in entries
+    ) else None
 
     items, skipped = [], []
     for parts, data in entries:
         path = "/".join(parts)
         name = parts[-1]
         ext = os.path.splitext(name)[1].lower()
+
         if ext not in KINDS:
             reason = "Old Word format: open it in Word and save it as .docx" if ext == ".doc" \
                 else "Not a Markdown, text, or Word file"
             skipped.append({"path": path, "reason": reason})
             continue
+
         try:
             title, text, extra, added = read_upload(name, data)
         except Exception:
             skipped.append({"path": path, "reason": "Could not read this file"})
             continue
+
         items.append({
             "path": path,
             "folders": parts[1:-1] if root else parts[:-1],
@@ -279,7 +532,8 @@ def build_plan(uploads):
             "text": text,
             "extra": extra,
         })
-    return root, items, skipped
+
+    return root, items, skipped, project_title
 
 
 def uploads_from_request():
@@ -343,8 +597,14 @@ def write_import(items, section, keep_folders, wrap_title=None):
 @bp.route('/import/preview', methods=['POST'])
 def api_import_preview():
     """What an import would bring in. Nothing is written."""
-    root, items, skipped = build_plan(uploads_from_request())
-    if len(items) == 1 and not root:
+    try:
+        root, items, skipped, project_title = build_plan(uploads_from_request())
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+    if project_title:
+        suggested = project_title
+    elif len(items) == 1 and not root:
         suggested = items[0]["title"]
     else:
         suggested = root or "Imported"
@@ -366,22 +626,25 @@ def api_import():
     destination = request.form.get("destination", "project")
     keep_folders = request.form.get("keepFolders", "1") == "1"
 
-    root, items, skipped = build_plan(uploads_from_request())
+    try:
+        root, items, skipped, project_title = build_plan(uploads_from_request())
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
     if not items:
         return jsonify({"error": "There is nothing to import."}), 400
 
     project = None
     wrap = None
     if destination == "new":
-        name = (request.form.get("projectName") or root or "Imported").strip()
+        name = (request.form.get("projectName") or project_title or root or "Imported").strip()
         slug, n = slugify(name) or "imported", 1
         base_slug = slug
         while os.path.exists(os.path.join(paths.PROJECTS_DIR, slug)):
             n += 1
             slug = f"{base_slug}-{n}"
         project = make_project(name, slug)
-    elif keep_folders and root:
-        wrap = root   # an imported folder stays together inside this project
+    elif keep_folders and root and not project_title:
+        wrap = root
 
     folders = write_import(items, section, keep_folders, wrap_title=wrap)
     return jsonify({

@@ -30,6 +30,10 @@ function shouldShowFolderTotals() {
   return state.app_state?.showFolderTotals ?? true;
 }
 
+function shouldShowFileIcons() {
+  return state.app_state?.showFileIcons ?? false;
+}
+
 function getFolderWordCount(items) {
   let total = 0;
 
@@ -334,7 +338,11 @@ function renderSection(
       const folderText = document.createElement("span");
       folderText.className = "tree-text";
       folderText.textContent = item.title;
-      folderLabel.append(treeIcon(item.collapsed ? "folder" : "folder-open"), folderText);
+      if (shouldShowFileIcons()) {
+        folderLabel.append(treeIcon(item.collapsed ? "folder" : "folder-open"), folderText);
+      } else {
+        folderLabel.appendChild(folderText);
+      }
       if (
         shouldShowCounts(sectionName) &&
         shouldShowFolderTotals()
@@ -421,12 +429,16 @@ function renderSection(
         if (draggedFolderId) {
           // Folder being dragged over another folder — show top/bottom reorder indicator
           if (draggedFolderId === item.id) return;
+          folderRow.classList.remove('drag-over-folder', 'drag-over-top', 'drag-over-bottom');
+
           const rect = folderRow.getBoundingClientRect();
-          const midpoint = rect.top + rect.height / 2;
-          if (e.clientY < midpoint) {
+          const edge = rect.height * 0.25;
+          if (e.clientY < rect.top + edge) {
             folderRow.classList.add('drag-over-top');
-          } else {
+          } else if (e.clientY > rect.bottom - edge) {
             folderRow.classList.add('drag-over-bottom');
+          } else {
+            folderRow.classList.add('drag-over-folder');
           }
         } else {
           // File being dragged over folder — highlight as "move into"
@@ -462,8 +474,14 @@ function renderSection(
         if (draggedFolderId) {
           if (draggedFolderId === item.id) return;
           const rect = folderRow.getBoundingClientRect();
-          const position = e.clientY < rect.top + rect.height / 2 ? "before" : "after";
-          await moveFolderTo(sectionName, draggedFolderId, null, item.id, position);
+          const edge = rect.height * 0.25;
+          if (e.clientY < rect.top + edge) {
+            await moveFolderTo(sectionName, draggedFolderId, null, item.id, "before");
+          } else if (e.clientY > rect.bottom - edge) {
+            await moveFolderTo(sectionName, draggedFolderId, null, item.id, "after");
+          } else {
+            await moveFolderTo(sectionName, draggedFolderId, null, null, "inside", item.id);
+          }
           return;
         }
 
@@ -562,7 +580,9 @@ function renderSection(
     label.className = "tree-label";
     label.style.cursor = "pointer";
 
-    label.appendChild(treeIcon(documentIconName(sectionName)));
+    if (shouldShowFileIcons()) {
+      label.appendChild(treeIcon(documentIconName(sectionName)));
+    }
     const labelText = document.createElement("span");
     labelText.className = "tree-text";
     labelText.appendChild(
@@ -757,6 +777,79 @@ function toggleFolderMenu(
     menu.remove();
   };
 
+    // ---------- New Subfolder ----------
+  const addSubfolder = document.createElement('div');
+  addSubfolder.textContent = "New Subfolder";
+  addSubfolder.onclick = async () => {
+    const title = await askText("New subfolder", "", {
+      placeholder: "Folder name",
+      okLabel: "Create"
+    });
+    if (!title) return;
+
+    const res = await fetch('/create_folder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        section,
+        title,
+        parent_folder_id: folder.id
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.status === "created") {
+      await loadAll();
+    } else {
+      showToast(data.error || "Error creating subfolder");
+    }
+
+    menu.remove();
+  };
+
+  // ---------- Move to Other Section ----------
+  if (section === "background" || section === "writing") {
+    const moveSection = document.createElement('div');
+    const targetSection = section === "background" ? "writing" : "background";
+
+    moveSection.textContent =
+      targetSection === "background" ? "Move to Background" : "Move to Writing";
+
+    moveSection.onclick = async () => {
+      const res = await fetch('/move_folder_section', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from_section: section,
+          section: targetSection,
+          folder_id: folder.id
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.status === "moved") {
+        await loadAll();
+
+        if (
+          currentFile.section === section &&
+          data.filenames.includes(currentFile.filename)
+        ) {
+          await openFile(targetSection, currentFile.filename);
+        }
+      } else {
+        showToast(data.error || "Folder move failed");
+      }
+
+      menu.remove();
+    };
+
+    menu.appendChild(moveSection);
+  }
+
   // ---------- Rename Folder ----------
 
   const rename =
@@ -863,6 +956,7 @@ function toggleFolderMenu(
   duplicateFolder.onclick = () => duplicateFolderItem(section, folder.id);
 
   menu.appendChild(addFile);
+  menu.appendChild(addSubfolder);
   menu.appendChild(rename);
   menu.appendChild(duplicateFolder);
   menu.appendChild(del);
@@ -1002,37 +1096,62 @@ async function moveFileTo(sectionName, draggedFilename, targetFilename, position
   renderLists();
 }
 
-async function moveFolderTo(sectionName, draggedFolderId, targetFilename, targetFolderIdForFile, position) {
+async function moveFolderTo(sectionName, draggedFolderId, targetFilename, targetFolderIdForFile, position, targetParentFolderId = null) {
   const isGlobal = sectionName === 'prompts' || sectionName === 'system';
   const stateArr = isGlobal ? state.global[sectionName] : state.project[sectionName];
 
   const folderObj = findFolderInTree(stateArr, draggedFolderId);
   if (!folderObj) return;
 
-  // Only support reordering at the SAME level as the target (root level for now)
-  const cleaned = removeFolderFromTree(stateArr, draggedFolderId);
+  let result;
 
-  const result = [];
-  let inserted = false;
-  for (const item of cleaned) {
-    const isTargetFile = item.type === "file" && getFilename(item) === targetFilename;
-    const isTargetFolder = item.type === "folder" && item.id === targetFolderIdForFile;
+  if (targetParentFolderId) {
+    // Prevent moving a folder into itself or one of its descendants.
+    if (
+      draggedFolderId === targetParentFolderId ||
+      findFolderInTree(folderObj.items || [], targetParentFolderId)
+    ) {
+      showToast("A folder cannot be moved into itself or its own contents.", "info");
+      return;
+    }
 
-    if ((isTargetFile || isTargetFolder)) {
-      if (position === "before") {
-        result.push(folderObj);
-        result.push(item);
+    const cleaned = removeFolderFromTree(stateArr, draggedFolderId);
+    const targetFolder = findFolderInTree(cleaned, targetParentFolderId);
+
+    if (!targetFolder) return;
+
+    targetFolder.items = targetFolder.items || [];
+    targetFolder.items.push(folderObj);
+    result = cleaned;
+
+  } else {
+    // Reorder before or after the target at the root level.
+    const cleaned = removeFolderFromTree(stateArr, draggedFolderId);
+
+    result = [];
+    let inserted = false;
+
+    for (const item of cleaned) {
+      const isTargetFile = item.type === "file" && getFilename(item) === targetFilename;
+      const isTargetFolder = item.type === "folder" && item.id === targetFolderIdForFile;
+
+      if (isTargetFile || isTargetFolder) {
+        if (position === "before") {
+          result.push(folderObj);
+          result.push(item);
+        } else {
+          result.push(item);
+          result.push(folderObj);
+        }
+        inserted = true;
       } else {
         result.push(item);
-        result.push(folderObj);
       }
-      inserted = true;
-    } else {
-      result.push(item);
     }
-  }
-  if (!inserted) {
-    result.push(folderObj);
+
+    if (!inserted) {
+      result.push(folderObj);
+    }
   }
 
   if (isGlobal) {
@@ -1100,6 +1219,46 @@ function toggleMenu(row, section, filename) {
       showToast(data.error);
     }
   };
+
+  // --- Move to Other Section ---
+  let moveSection = null;
+  if (section === "background" || section === "writing") {
+    moveSection = document.createElement('div');
+    const targetSection = section === "background" ? "writing" : "background";
+
+    moveSection.textContent =
+      targetSection === "background" ? "Move to Background" : "Move to Writing";
+
+    moveSection.onclick = async () => {
+      const res = await fetch('/move_file_section', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from_section: section,
+          section: targetSection,
+          filename
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.status === "moved") {
+        const wasCurrent =
+          currentFile.section === section &&
+          currentFile.filename === filename;
+
+        await loadAll();
+
+        if (wasCurrent) {
+          await openFile(targetSection, filename);
+        }
+      } else {
+        showToast(data.error || "File move failed");
+      }
+
+      menu.remove();
+    };
+  }
 
   const del = document.createElement('div');
   del.textContent = "Delete";
@@ -1210,6 +1369,7 @@ function toggleMenu(row, section, filename) {
 
   menu.appendChild(rename);
   menu.appendChild(duplicate);
+  if (moveSection) menu.appendChild(moveSection);
   menu.appendChild(history);
   menu.appendChild(exportMd);
   menu.appendChild(exportWord);

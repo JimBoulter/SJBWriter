@@ -1,19 +1,43 @@
-**Developer's Note:** This is a fork of Jim Boulter's app [SJB Writer](https://github.com/blossomz37/SJBWriter-fork).
-**Date:** 2026-10-22
-___
-
-# SJBWriter
+# SJB Writer
 
 **A local-first writing environment with AI assistance, flexible project organization, and control over your creative workflow.**
 
-SJBWriter is a writing application designed to help you organize creative projects, manage writing files, and work with large language models (LLMs) when you choose. It combines a structured writing environment with the flexibility to use local AI models or connect to online models.
+SJB Writer is a writing application designed to help you organize creative projects, manage writing files, and work with large language models (LLMs) when you choose. It combines a structured writing environment with the flexibility to use local AI models or connect to online models.
 
-SJBWriter began as a personal project inspired by my own writing workflow. It's being developed with an emphasis on practical features, a comfortable writing environment, and keeping the writer in control.
+SJB Writer began as a personal project inspired by my own writing workflow. It's being developed with an emphasis on practical features, a clean and comfortable writing environment, and keeping the writer in control.
 
-**Current version:** 0.9.0  
-**Development status:** Early development
+**Current version:** 1.0.0
+**Development status:** Initial release
 
-## What SJBWriter Offers
+## Version 1.0.0: Release Notes and Known Issues
+
+SJB Writer 1.0.0 is the first public release of the standalone macOS application. The currently available packaged build is for Apple Silicon Macs.
+
+### Known Issues and Workarounds
+
+The following issues are known in version 1.0.0. They may not affect every user or configuration, but they are documented here so users know they are recognized and are being addressed.
+
+- **macOS security warning:** The application is currently ad-hoc signed and has not yet been notarized by Apple. macOS may prevent it from opening initially. If this happens, use System Settings > Privacy & Security to review the security notice and select Open Anyway, if that option is available.
+- **Ollama model discovery:** On some installations, locally installed Ollama models may not appear until an online model has first been added. Local model discovery should work independently and is being corrected.
+- **OpenRouter API key saving:** After entering or changing an API key, press Enter to save it. The current interface does not provide a sufficiently clear method of saving, but confirmation that the key has been saved will properly reflect when it is done.
+- **Theme persistence:** Theme preferences may not persist between application launches in the packaged version.
+- **Browser behavior:** The application currently opens in a new browser tab rather than a dedicated application window on some browsers.
+- **Application shutdown:** Closing the browser tab or window does not automatically stop the SJB Writer background process. The launcher may continue running until it is closed separately.
+
+These issues are being addressed for the next release.
+
+### Planned Version 1.0.1
+
+The current target date for version 1.0.1 is **Friday, November 20, 2026**.
+
+This release is expected to include fixes for the known issues listed above, along with:
+
+- A standalone build for Intel-based Macs.
+- Windows compatibility and a standalone Windows build, if development and testing go well.
+
+Release timing and platform availability may change depending on testing results.
+
+## What SJB Writer Offers
 
 ### Organized Writing Projects
 
@@ -25,14 +49,14 @@ SJBWriter began as a personal project inspired by my own writing workflow. It's 
 
 ### Flexible AI Assistance
 
-SJBWriter supports two ways to work with language models:
+SJB Writer supports two ways to work with language models:
 
 - **Ollama:** Connect to models running locally on your computer.
 - **OpenRouter:** Connect to supported online models through an API key.
 
-Choose models according to your hardware, preferences, and the task at hand. SJBWriter includes model management features to help you organize available models and keep useful descriptions and notes.
+Choose models according to your hardware, preferences, and the task at hand. SJB Writer includes model management features to help you organize available models and keep useful descriptions and notes.
 
-AI assistance is optional. You can use SJBWriter to organize and manage your writing without generating anything through an AI model.
+AI assistance is optional. You can use SJB Writer to organize and manage your writing without generating anything through an AI model.
 
 ### A Local-First Approach
 
@@ -42,83 +66,31 @@ When you use Ollama with a locally running model, prompts can be processed on yo
 
 When you use OpenRouter, your prompts are sent through that service to the selected model provider. Review the applicable providers' privacy policies and terms before sending sensitive material.
 
-## Installation and Setup
-
-SJBWriter is currently a Python application that runs locally through a browser. It is not yet packaged as a standalone desktop application.
-
-### Requirements
-
-- Python 3
-- Flask
-- Requests
-- A modern web browser
-
-Ollama is optional. An OpenRouter API key is also optional and is needed only if you want to use models through that service.
 
 ### Platform Support
 
-**Mac is the only platform tested so far.** Windows compatibility testing is planned, and installation notes and any necessary updates will be added as that testing progresses.
+**MmacOS is the only platform currently supported by the standalone release. Apple Silicon is supported in version 1.0.0. An Intel Mac build is planned for version 1.0.1, with Windows support under consideration for that release.
 
-### Getting Started on Mac
-
-1. Install Python from [python.org](https://www.python.org/downloads/) if it isn't already available.
-2. Clone or download this repository.
-3. Open a terminal in the SJBWriter project directory.
-4. Install the required Python packages:
-
-   ```bash
-   python3 -m pip install -r requirements.txt
-   ```
-
-5. Start the application:
-
-   ```bash
-   cd app
-   python3 app.py
-   ```
-
-6. Open the local address displayed in the terminal, normally `http://127.0.0.1:5050`.
-
-Keep the terminal running while using the application. To stop the server, return to the terminal and press `Ctrl+C`.
-
-These instructions describe the current development version. Installation and dependency management may change as SJBWriter evolves.
-
-### Running the Tests
-
-The server tests use only Python's built-in `unittest`. From the project folder:
-
-```bash
-python3 -m unittest discover tests
-```
-
-Each test runs the app on a small, made-up library in a temporary folder, so your own books are never touched. Calls to OpenRouter and Ollama are faked, so the tests never spend credits.
-
-An optional browser smoke test clicks through the main features in a real browser. It needs Node and Playwright:
-
-```bash
-npm install --no-save playwright && npx playwright install chromium
-node tests/browser/smoke.mjs
-```
 
 ### Configuring AI Models
 
 You can explore the application without configuring AI assistance.
 
-To use local models, install [Ollama](https://ollama.com/) separately and download a model compatible with your computer. SJBWriter can discover locally installed models.
+To use local models, install [Ollama](https://ollama.com/) separately and download a model compatible with your computer. SJB Writer can discover locally installed models.
 
 To use online models, configure an API key for [OpenRouter](https://openrouter.ai/). API usage may incur charges depending on the model and provider.
 
 ## Development Status
 
-SJBWriter is actively evolving. Version 0.9.0 includes the core writing environment, project and file organization, visual customization, and model management.
+Version 1.0.0 includes the core writing environment, nested project organization, document importing, visual customization, search and replace, and model management.
 
-The application has been tested on both Apple Silicon and Intel Macs. Windows compatibility testing is still planned.
+The application has been tested on both Apple Silicon and Intel Macs. Windows compatibility testing is still planned. This 1.0.0 release only supports Apple silicon.
 
-Features, installation instructions, and the user interface may change as development continues. The README will be updated as testing and development progress.
+SJB Writer is actively evolving. Features and the user interface may change as development continues. Updates and release notes will be provided as the project progresses.
 
 ## Privacy and Data
 
-SJBWriter is designed around local file storage and user control.
+SJB Writer is designed around local file storage and user control.
 
 - Project and writing data are stored locally.
 - Local Ollama models can process prompts on your computer.
@@ -129,10 +101,25 @@ Local storage does not automatically replace backups. Keep copies of important w
 
 ## Contributing and Feedback
 
-SJBWriter is currently a personal development project shared publicly so others can explore its progress.
+SJB Writer is currently an independently developed project shared publicly so others can explore its progress.
 
 Feedback, suggestions, and reports of reproducible issues are welcome. Please include your operating system, Python version, and steps to reproduce a problem when reporting an issue.
 
+
+## Acknowledgments
+
+SJB Writer incorporates contributions from Carlo V. Santiago. His work helped expand and improve the application, and his contributions are greatly appreciated.
+
+[github.com/blossomz37](https://github.com/blossomz37)
+
 ## License
 
-A license has not yet been specified. Licensing will be addressed after Windows testing and before the project is ready for broader distribution. Until a license is added, please do not assume that the source code is available for unrestricted reuse, redistribution, or modification.
+SJB Writer is licensed under the PolyForm Noncommercial License 1.0.0.
+
+You may use, study, modify, and distribute this software for noncommercial purposes, subject to the terms of the license.
+
+Commercial use requires separate permission from SJB Property Group, LLC.
+
+See [LICENSE](LICENSE.txt) for the complete license terms.
+
+Copyright 2026 SJB Property Group, LLC.

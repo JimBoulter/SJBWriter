@@ -1,53 +1,62 @@
 {
   "prompts": [
     {
-      "collapsed": true,
+      "collapsed": false,
       "id": "epbm",
       "items": [
         {
           "filename": "epbm-1-premise.md",
           "title": "EPBM 1 - Premise",
-          "type": "file"
+          "type": "file",
+          "wordCount": 35
         },
         {
           "filename": "epbm-2-characters.md",
           "title": "EPBM 2 - Characters",
-          "type": "file"
+          "type": "file",
+          "wordCount": 53
         },
         {
           "filename": "epbm-3-outline.md",
           "title": "EPBM 3 - Outline",
-          "type": "file"
+          "type": "file",
+          "wordCount": 48
         },
         {
           "filename": "epbm-4-chapter-plan.md",
           "title": "EPBM 4 - Chapter Plan",
-          "type": "file"
+          "type": "file",
+          "wordCount": 311
         },
         {
           "filename": "epbm-5-chapter-draft.md",
           "title": "EPBM 5 - Chapter Draft",
-          "type": "file"
+          "type": "file",
+          "wordCount": 117
         },
         {
           "filename": "epbm-6-chapter-editing-plan.md",
           "title": "EPBM 6 - Chapter Editing Plan",
-          "type": "file"
+          "type": "file",
+          "wordCount": 180
         },
         {
           "filename": "epbm-7-chapter-final.md",
           "title": "EPBM 7 - Chapter Final",
-          "type": "file"
+          "type": "file",
+          "wordCount": 67
         },
         {
           "filename": "epbm-8-continuity-check.md",
           "title": "EPBM 8 - Continuity Check",
-          "type": "file"
+          "type": "file",
+          "wordCount": 22
         },
         {
           "filename": "epbm-9-review-refinement.md",
           "title": "EPBM 9 - Review & Refinement",
-          "type": "file"
+          "type": "file",
+          "wordCount": 37
         },
         {
           "filename": "plan.md",
@@ -78,8 +87,8 @@
     "filename": "ai-program-instructions-and-tasks.md"
   },
   "last_opened_global": {
-    "project": "sample-project",
-    "section": "background",
-    "filename": "setup.md"
+    "project": "four-days-to-think",
+    "section": "writing",
+    "filename": "chapter-2.md"
   }
 }

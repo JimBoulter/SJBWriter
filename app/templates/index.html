@@ -7,16 +7,16 @@
   <link rel="icon"
       type="image/png"
       sizes="32x32"
-      href="{{ url_for('static', filename='branding/favicon-32x32.png') }}">
+      href="{{ url_for('static', filename='favicon-32x32.png') }}">
   <link rel="icon"
       type="image/png"
       sizes="16x16"
-      href="{{ url_for('static', filename='branding/favicon-16x16.png') }}">
+      href="{{ url_for('static', filename='favicon-16x16.png') }}">
   <link rel="apple-touch-icon"
-      href="{{ url_for('static', filename='branding/apple-touch-icon.png') }}">
+      href="{{ url_for('static', filename='apple-touch-icon.png') }}">
   <link rel="icon"
       type="image/x-icon"
-      href="{{ url_for('static', filename='branding/favicon.ico') }}">
+      href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
 {% include "_icons.html" %}
@@ -26,7 +26,7 @@
   <div class="top-bar-brand">
     <!-- Logo = home: closes the document and shows the start screen -->
     <button type="button" class="top-bar-home tip-start" onclick="closeDocument()" data-tip="Home" aria-label="Home: close the document">
-      <img src="{{ url_for('static', filename='branding/icon-192.png') }}" alt="" class="top-bar-logo" />
+      <img src="{{ url_for('static', filename='android-chrome-192x192.png') }}" alt="" class="top-bar-logo" />
       <span class="top-bar-version">v{{ app_version }}</span>
     </button>
     <button type="button" id="sidebarToggle" class="icon-btn ghost-btn tip-start" onclick="toggleSidebar()" data-tip="Sidebar (⌘\)" aria-label="Toggle sidebar" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-panel-left"/></svg></button>
@@ -163,7 +163,9 @@
   <div id="preview" class="markdown-preview hidden" title="Double-click to edit"></div>
   <!-- Shown instead of the title, toolbar, editor, and AI dock when no file is open -->
   <div id="emptyState" class="empty-state">
-    <svg class="icon empty-state-icon" aria-hidden="true"><use href="#i-feather"/></svg>
+    <img class="empty-state-icon"
+     src="{{ url_for('static', filename='android-chrome-192x192.png') }}"
+     alt="SJB Writer">
     <h2>No document open</h2>
     <p>Choose a file in the sidebar, or start a new one.</p>
     <div class="empty-state-actions">
@@ -390,11 +392,11 @@
   <div class="modal-content import-content">
     <button type="button" class="icon-btn ghost-btn modal-close tip-end" onclick="closeImport()" data-tip="Close (Esc)" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
     <h2>Import</h2>
-    <p class="trash-hint">Markdown, plain text, and Word (.docx) files. You see what will come in before anything is added, and your original files are never changed.</p>
+    <p class="trash-hint">RaptorWrite project exports (.json), Markdown, plain text, and Word (.docx) files. You see what will come in before anything is added, and your original files are never changed.</p>
     <div class="import-pick">
       <button type="button" onclick="pickImport('files')">Choose files…</button>
       <button type="button" onclick="pickImport('folder')">Choose a folder…</button>
-      <input type="file" id="importFiles" multiple accept=".md,.markdown,.txt,.docx" hidden />
+      <input type="file" id="importFiles" multiple accept=".json,.md,.markdown,.txt,.docx" hidden />
       <input type="file" id="importFolder" webkitdirectory multiple hidden />
     </div>
     <div id="importPreview" class="import-preview hidden">
@@ -498,6 +500,12 @@
         </select>
       </div>
 
+      <div class="settings-section">
+        <label class="settings-switch">
+          <input type="checkbox" id="showFileIcons" />
+          Show File Icons
+        </label>
+      </div>
 
       <div class="settings-section">
         <label>Sidebar Word Counts</label>
@@ -577,16 +585,6 @@
           </select>
         </div>
 
-        <!-- AI on/off -->
-        <div class="settings-section">
-          <h2>AI features</h2>
-          <label class="settings-switch">
-            <input type="checkbox" id="aiEnabledToggle" />
-            Use AI features
-          </label>
-          <div class="settings-note">Turn off to use SJB Writer as a plain document editor. The AI setup, instruction box, and Generate are hidden; your AI settings are kept.</div>
-        </div>
-
         <!-- Where the books live; acts at once (it has its own confirm) -->
         <div class="settings-section">
           <h2>Books folder</h2>
@@ -605,6 +603,17 @@
           <div id="apiKeyStatus" class="settings-note"></div>
         </div>
 
+
+        <!-- AI on/off -->
+        <div class="settings-section">
+          <h2>AI features</h2>
+          <label class="settings-switch">
+            <input type="checkbox" id="aiEnabledToggle" />
+            Use AI features
+          </label>
+          <div class="settings-note">Turn off to use SJB Writer as a plain document editor. Or just don't click Generate, but left it here for Carlo. :)</div>
+        </div>
+
       </div>
 
       <div class="modal-actions">
@@ -616,7 +625,7 @@
     <!-- ABOUT -->
     <div id="settingsAboutView">
       <img
-        src="{{ url_for('static', filename='branding/icon-512.png') }}"
+        src="{{ url_for('static', filename='android-chrome-512x512.png') }}"
         alt="SJB Writer"
         class="about-app-icon"
       />

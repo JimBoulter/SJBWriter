@@ -162,6 +162,8 @@ async function saveVisualSettings() {
   state.app_state.themeMode = themeMode;
   state.app_state.accent = accent;
   state.app_state.sidebarFontSize = sidebarFontSize;
+  state.app_state.showFileIcons =
+  document.getElementById("showFileIcons").checked;
   state.app_state.showWritingCounts =
    document.getElementById("showWritingCounts").checked;
   state.app_state.showBackgroundCounts =
@@ -191,7 +193,8 @@ async function saveVisualSettings() {
         state.app_state.showFolderTotals,
       themeMode: state.app_state.themeMode,
       accent: state.app_state.accent,
-      sidebarFontSize: state.app_state.sidebarFontSize
+      sidebarFontSize: state.app_state.sidebarFontSize,
+      showFileIcons: state.app_state.showFileIcons,
     })
   });
 
@@ -205,4 +208,6 @@ function loadVisualSettingsIntoUI() {
   pickAccent(accent);
   document.getElementById("sidebarFontSize").value =
     state.app_state.sidebarFontSize || "13px";
+  document.getElementById("showFileIcons").checked =
+    state.app_state?.showFileIcons ?? false;
 }

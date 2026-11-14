@@ -2466,8 +2466,8 @@ body.zen .top-bar {
 }
 
 .empty-state-icon {
-  width: 40px;
-  height: 40px;
+  width: 96px;
+  height: 96px;
   stroke-width: 1.5;
   color: var(--accent);
   opacity: 0.8;

@@ -395,4 +395,6 @@ function loadSettingsIntoUI() {
     state.app_state.showFolderTotals;
   document.getElementById("sidebarFontSize").value =
     state.app_state.sidebarFontSize || "13px";
+  document.getElementById("showFileIcons").checked =
+    state.app_state?.showFileIcons ?? false;
 }

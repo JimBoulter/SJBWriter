@@ -24,7 +24,7 @@ from sjb.storage import reject_unsafe_names
 
 app = Flask(__name__)
 
-APP_VERSION = "0.9.0"
+APP_VERSION = "1.0.0"
 
 # Before every request, in this order: convert old JSON documents once,
 # map old .json names from pages opened before the switch, then refuse

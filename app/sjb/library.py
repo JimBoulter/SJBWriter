@@ -11,7 +11,70 @@ from sjb.storage import (
 )
 
 # ===================== STRUCTURE INIT =====================
+
 def ensure_structure():
+    # Install bundled starter content once, in the user's Books folder.
+    # The marker lives in Application Support, outside the movable Books folder.
+    starter_marker = os.path.join(paths.GLOBAL_DIR, ".starter-content-installed")
+
+    if paths.FROZEN and not os.path.exists(starter_marker):
+        required_sources = (
+            paths.STARTER_GLOBAL_STATE,
+            paths.STARTER_PROMPTS_DIR,
+            paths.STARTER_SYSTEM_DIR,
+            paths.SAMPLE_PROJECT_DIR,
+        )
+        for source in required_sources:
+            if not os.path.exists(source):
+                raise FileNotFoundError(
+                    f"Bundled starter content not found: {source}"
+                )
+        os.makedirs(paths.LIBRARY_DIR, exist_ok=True)
+
+        # Copy each starter folder only if its destination does not exist.
+        for source, destination in (
+            (
+                paths.STARTER_PROMPTS_DIR,
+                os.path.join(paths.LIBRARY_DIR, "prompts"),
+            ),
+            (
+                paths.STARTER_SYSTEM_DIR,
+                os.path.join(paths.LIBRARY_DIR, "system"),
+            ),
+        ):
+            if os.path.isdir(source) and not os.path.exists(destination):
+                shutil.copytree(
+                    source,
+                    destination,
+                    ignore=shutil.ignore_patterns(".DS_Store"),
+                )
+
+        # Install the starter Global sidebar state only if absent.
+        if (
+            not os.path.exists(paths.GLOBAL_STATE)
+            and os.path.isfile(paths.STARTER_GLOBAL_STATE)
+        ):
+            shutil.copy2(paths.STARTER_GLOBAL_STATE, paths.GLOBAL_STATE)
+
+        # Install the complete Sample Project only if it does not exist.
+        sample_destination = os.path.join(
+            paths.PROJECTS_DIR, "sample-project"
+        )
+        if (
+            os.path.isdir(paths.SAMPLE_PROJECT_DIR)
+            and not os.path.exists(sample_destination)
+        ):
+            os.makedirs(paths.PROJECTS_DIR, exist_ok=True)
+            shutil.copytree(
+                paths.SAMPLE_PROJECT_DIR,
+                sample_destination,
+                ignore=shutil.ignore_patterns(".DS_Store"),
+            )
+
+        # Mark initialization complete so deleted content is never restored.
+        with open(starter_marker, "w", encoding="utf-8") as f:
+            f.write("installed\n")
+
     # Global folders
     os.makedirs(os.path.join(paths.LIBRARY_DIR, "prompts"), exist_ok=True)
     os.makedirs(os.path.join(paths.LIBRARY_DIR, "system"), exist_ok=True)
@@ -26,7 +89,7 @@ def ensure_structure():
 
     project_dir = get_project_dir()
     project_meta_path = os.path.join(project_dir, "project.json")
-    # A fresh install has no project folder yet
+
     os.makedirs(project_dir, exist_ok=True)
 
     if not os.path.exists(project_meta_path):
@@ -34,6 +97,7 @@ def ensure_structure():
             "id": get_current_project(),
             "title": get_current_project().replace("-", " ").title()
         })
+
     project_state = get_project_state()
 
     # Project folders
@@ -42,7 +106,13 @@ def ensure_structure():
 
     # Project state
     if not os.path.exists(project_state):
-        if os.path.exists(SAMPLE_PROJECT_STATE):
+        if paths.FROZEN and get_current_project() == "sample-project":
+            # Do not restore the bundled Sample state after first installation.
+            save_json(project_state, {
+                "background": [],
+                "writing": [],
+            })
+        elif os.path.exists(SAMPLE_PROJECT_STATE):
             shutil.copy2(SAMPLE_PROJECT_STATE, project_state)
         else:
             raise FileNotFoundError(
@@ -102,9 +172,11 @@ def sync_tree_with_disk(section, items):
 # ===================== APP STATE HELPERS =====================
 
 def load_app_state():
+    default_project = "sample-project" if paths.FROZEN else "default"
+
     defaults = {
-        "current_project": "default",
-        "recent_projects": ["default"],
+        "current_project": default_project,
+        "recent_projects": [default_project],
         "showWritingCounts": True,
         "showBackgroundCounts": True,
         "showPromptCounts": False,

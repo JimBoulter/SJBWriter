@@ -41,3 +41,7 @@ Global/system/*
 
 # Cached copy of OpenRouter's model list (refreshed from Manage Models)
 Global/openrouter_models.json
+
+# PyInstaller build output
+/build/
+/dist/

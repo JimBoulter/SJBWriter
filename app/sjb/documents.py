@@ -292,13 +292,23 @@ def api_create_folder():
 
     state = load_json(state_file)
 
-    state[section].append({
+    entry = {
         "type": "folder",
         "id": slugify(title),
         "title": title,
         "collapsed": False,
         "items": []
-    })
+    }
+
+    parent_folder_id = data.get("parent_folder_id")
+
+    if parent_folder_id:
+        parent = find_folder(state.get(section, []), parent_folder_id)
+        if not parent:
+            return jsonify({"error": "Parent folder not found"}), 404
+        parent.setdefault("items", []).append(entry)
+    else:
+        state[section].append(entry)
 
     save_json(state_file, state)
 
@@ -731,3 +741,98 @@ def api_move_file_section():
     save_json(target_state_file, target_state)
 
     return jsonify({"status": "moved", "section": to_section, "filename": filename})
+
+@bp.route('/move_folder_section', methods=['POST'])
+def api_move_folder_section():
+    ensure_structure()
+    data = request.json or {}
+
+    from_section = data.get("from_section")
+    to_section = data.get("section")
+    folder_id = data.get("folder_id")
+
+    if (
+        from_section not in ("background", "writing")
+        or to_section not in ("background", "writing")
+        or not folder_id
+    ):
+        return jsonify({"error": "Invalid move request"}), 400
+
+    if from_section == to_section:
+        return jsonify({"error": "Folder is already in this section"}), 400
+
+    state_file = get_state_file(from_section)
+    state = load_json(state_file)
+
+    folder = find_folder(state.get(from_section, []), folder_id)
+    if not folder:
+        return jsonify({"error": "Folder not found"}), 404
+
+    # Collect every document in the folder, including nested folders.
+    files = []
+
+    def collect_files(items):
+        for item in items:
+            if isinstance(item, dict) and item.get("type") == "folder":
+                collect_files(item.get("items", []))
+            elif isinstance(item, dict) and item.get("filename"):
+                files.append(item["filename"])
+            elif isinstance(item, str):
+                files.append(item)
+
+    collect_files(folder.get("items", []))
+
+    # Check for folder ID collisions in the destination.
+    moving_folder_ids = set(folder_ids([folder]))
+    target_folder_ids = set(folder_ids(state.get(to_section, [])))
+
+    if moving_folder_ids & target_folder_ids:
+        return jsonify({
+            "error": "The destination already contains a folder with the same ID"
+        }), 400
+
+    # Check every document and its version history before moving anything.
+    for filename in files:
+        src = os.path.join(get_base_path(from_section), filename)
+        dest = os.path.join(get_base_path(to_section), filename)
+
+        if not os.path.isfile(src):
+            return jsonify({"error": f"File not found: {filename}"}), 404
+
+        if os.path.exists(dest):
+            return jsonify({
+                "error": f"The destination already has a file named {filename}"
+            }), 400
+
+        old_history = history_dir(from_section, filename)
+        new_history = history_dir(to_section, filename)
+
+        if os.path.exists(old_history) and os.path.exists(new_history):
+            return jsonify({
+                "error": f"Version history already exists for {filename} in the destination"
+            }), 400
+
+    # Move documents and their version histories.
+    for filename in files:
+        src = os.path.join(get_base_path(from_section), filename)
+        dest = os.path.join(get_base_path(to_section), filename)
+        shutil.move(src, dest)
+
+        old_history = history_dir(from_section, filename)
+        new_history = history_dir(to_section, filename)
+
+        if os.path.isdir(old_history):
+            os.makedirs(os.path.dirname(new_history), exist_ok=True)
+            shutil.move(old_history, new_history)
+
+    # Move the folder entry between the two section trees.
+    entry = remove_folder(state[from_section], folder_id)
+    state.setdefault(to_section, []).append(entry)
+    save_json(state_file, state)
+
+    return jsonify({
+        "status": "moved",
+        "section": to_section,
+        "folder_id": folder_id,
+        "filenames": files
+    })
