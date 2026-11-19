@@ -68,6 +68,20 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+// SJB Writer application lifecycle.
+// Notify the launcher when this browser page opens or closes.
+
+window.addEventListener("pageshow", () => {
+  fetch("/lifecycle/open", {
+    method: "POST",
+    keepalive: true
+  }).catch(() => {});
+});
+
+window.addEventListener("pagehide", () => {
+  navigator.sendBeacon("/lifecycle/close");
+});
+
 window.onload = async () => {
   loadSettings();
   await fetchModels();
@@ -82,7 +96,7 @@ window.onload = async () => {
     if (localStorage.getItem("sjb_sidebar_collapsed") === "1") setSidebarCollapsed(true);
   } catch (e) {}
 
-  setAiPanelOpen(readPref("sjb_ai_panel_open", false));
+  setAiPanelOpen(readPref("sjb_ai_panel_open", true));
   initPanelResize();
   applyAiEnabled();
   initGenerationPanel();

@@ -533,7 +533,7 @@ function initGenerationPanel() {
   slider.value = state.app_state.temperature ?? DEFAULT_TEMPERATURE;
   reasoning.value = state.app_state.reasoningEffort || "default";
   showTemperature(slider.value);
-  details.open = readPref("sjb_generation_open", true);
+  details.open = readPref("sjb_generation_open", false);
 
   slider.addEventListener("input", () => {
     showTemperature(slider.value);

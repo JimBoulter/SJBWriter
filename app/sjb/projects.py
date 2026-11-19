@@ -6,7 +6,12 @@ from flask import request, jsonify, Blueprint
 
 from sjb import paths
 from sjb.storage import load_json, save_json, slugify
-from sjb.library import free_name, load_app_state, write_app_state
+from sjb.library import (
+    ensure_structure,
+    free_name,
+    load_app_state,
+    write_app_state,
+)
 from sjb.history import move_to_trash
 
 bp = Blueprint("projects", __name__)
@@ -14,7 +19,7 @@ bp = Blueprint("projects", __name__)
 @bp.route('/projects', methods=['GET'])
 def api_get_projects():
 
-    os.makedirs(paths.PROJECTS_DIR, exist_ok=True)
+    ensure_structure()
 
     projects = []
 

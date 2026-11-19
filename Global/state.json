@@ -1,68 +1,74 @@
 {
   "prompts": [
     {
-      "collapsed": false,
+      "collapsed": true,
       "id": "epbm",
       "items": [
+        {
+          "filename": "epbm-intro.md",
+          "title": "EPBM Intro",
+          "type": "file",
+          "wordCount": 854
+        },
         {
           "filename": "epbm-1-premise.md",
           "title": "EPBM 1 - Premise",
           "type": "file",
-          "wordCount": 35
+          "wordCount": 94
         },
         {
           "filename": "epbm-2-characters.md",
           "title": "EPBM 2 - Characters",
           "type": "file",
-          "wordCount": 53
+          "wordCount": 129
         },
         {
           "filename": "epbm-3-outline.md",
           "title": "EPBM 3 - Outline",
           "type": "file",
-          "wordCount": 48
+          "wordCount": 212
         },
         {
           "filename": "epbm-4-chapter-plan.md",
           "title": "EPBM 4 - Chapter Plan",
           "type": "file",
-          "wordCount": 311
+          "wordCount": 460
         },
         {
           "filename": "epbm-5-chapter-draft.md",
           "title": "EPBM 5 - Chapter Draft",
           "type": "file",
-          "wordCount": 117
+          "wordCount": 181
         },
         {
           "filename": "epbm-6-chapter-editing-plan.md",
           "title": "EPBM 6 - Chapter Editing Plan",
           "type": "file",
-          "wordCount": 180
+          "wordCount": 306
         },
         {
           "filename": "epbm-7-chapter-final.md",
           "title": "EPBM 7 - Chapter Final",
           "type": "file",
-          "wordCount": 67
+          "wordCount": 174
         },
         {
           "filename": "epbm-8-continuity-check.md",
           "title": "EPBM 8 - Continuity Check",
           "type": "file",
-          "wordCount": 22
+          "wordCount": 88
         },
         {
           "filename": "epbm-9-review-refinement.md",
           "title": "EPBM 9 - Review & Refinement",
           "type": "file",
-          "wordCount": 37
+          "wordCount": 280
         },
         {
           "filename": "plan.md",
-          "title": "7D Plan - Sample Prompt",
+          "title": "EPBM Customized for a Series",
           "type": "file",
-          "wordCount": 210
+          "wordCount": 357
         }
       ],
       "title": "EPBM",
@@ -87,8 +93,8 @@
     "filename": "ai-program-instructions-and-tasks.md"
   },
   "last_opened_global": {
-    "project": "four-days-to-think",
-    "section": "writing",
-    "filename": "chapter-2.md"
+    "project": "sample-project",
+    "section": "background",
+    "filename": "setup.md"
   }
 }

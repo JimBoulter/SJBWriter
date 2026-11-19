@@ -701,6 +701,24 @@ input[type="radio"] {
   margin-bottom: 24px;
 }
 
+
+.api-key-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.api-key-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.api-key-row button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
 #settingsAboutView {
   flex: 0 0 190px;
   display: flex;
@@ -794,6 +812,37 @@ input[type="radio"] {
   background-color: var(--active);
   outline: 2px dashed #4da3ff;
   border-radius: 6px;
+}
+
+
+/* About panel support contact */
+#settingsAboutView {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+  padding-bottom: 45px;
+}
+
+.about-support {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted, #999);
+}
+
+.about-support a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.about-support a:hover {
+  color: var(--accent, #c9a66b);
 }
 
 

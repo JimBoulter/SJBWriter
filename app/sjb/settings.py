@@ -139,27 +139,47 @@ def api_set_data_folder():
         if os.path.realpath(target) == os.path.realpath(DEFAULT_DATA_ROOT):
             target = None   # the default Books folder
 
+    destination = target or DEFAULT_DATA_ROOT
+    fresh_books = (
+        not os.path.isdir(destination)
+        or not os.listdir(destination)
+    )
+
     if target and copy:
         if has_books(target):
             return jsonify({"error": "That folder already has books. Use them instead of copying."}), 400
         copy_books(paths.DATA_ROOT, target)
+        fresh_books = False
 
     if target:
         save_json(DATA_FOLDER_FILE, {"path": target})
     elif os.path.exists(DATA_FOLDER_FILE):
         os.remove(DATA_FOLDER_FILE)
-    set_data_root(target or DEFAULT_DATA_ROOT)
+    set_data_root(destination)
 
-    # Open a project that exists in the new place
     app_state = load_app_state()
-    projects = sorted(
+    existing_projects = sorted(
         p for p in (os.listdir(paths.PROJECTS_DIR) if os.path.isdir(paths.PROJECTS_DIR) else [])
         if not p.startswith(".") and os.path.isdir(os.path.join(paths.PROJECTS_DIR, p))
     )
-    if app_state.get("current_project") not in projects:
-        app_state["current_project"] = projects[0] if projects else "default"
-    app_state["recent_projects"] = [p for p in app_state.get("recent_projects", []) if p in projects]
+
+    if paths.FROZEN and fresh_books:
+        # A new empty Books folder should open the bundled Sample Project.
+        app_state["current_project"] = "sample-project"
+        app_state["recent_projects"] = ["sample-project"]
+    elif existing_projects and app_state.get("current_project") not in existing_projects:
+        app_state["current_project"] = (
+            "sample-project" if "sample-project" in existing_projects
+            else existing_projects[0]
+        )
+
+    app_state["recent_projects"] = [
+        p for p in app_state.get("recent_projects", [])
+        if p in existing_projects or (paths.FROZEN and fresh_books and p == "sample-project")
+    ]
     write_app_state(app_state)
+
+    # Initialize the selected Books folder after choosing a valid project.
     ensure_structure()
 
     return jsonify({"status": "set", **data_folder_status()})

@@ -599,7 +599,20 @@
         <!-- OpenRouter API Key section -->
         <div class="settings-section">
           <h2>OpenRouter API Key</h2>
-          <input id="apiKey" type="password" placeholder="sk-..." />
+          <div class="api-key-row">
+            <input
+              id="apiKey"
+              type="password"
+              placeholder="sk-..."
+              oninput="updateApiKeySaveButton()"
+            />
+            <button
+              type="button"
+              id="apiKeySaveBtn"
+              onclick="saveApiKey()"
+              disabled
+            >Save</button>
+          </div>
           <div id="apiKeyStatus" class="settings-note"></div>
         </div>
 
@@ -633,6 +646,10 @@
       <p id="aboutVersion">Version {{ app_version }}</p>
       <p class="about-description">
         A local-first writing environment.
+      </p>
+      <p class="about-support">
+        Features and Support:
+        <a href="mailto:Jim@SJBPropertyGroupLLC.com">Email Jim</a>
       </p>
     </div>
   </div>

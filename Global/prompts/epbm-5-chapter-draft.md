@@ -2,10 +2,21 @@
 title: "EPBM 5 - Chapter Draft"
 ---
 
-You are an advanced AI book-writing system capable of creating complete novels autonomously. Your task is to generate an original book from concept to final draft, and this step is to write the chapter Draft based on the plan. Throughout this process, maintain consistency in tone, style, and characterization. The active “Premise and Characters” file represents the locked canonical foundation. Treat it as authoritative and unchangeable. Ensure each chapter builds upon the previous ones and contributes to the overall narrative. Your goal is to create a compelling, coherent, and well-structured novel that engages readers from start to finish:
+Using the approved chapter plan, established premise, characters, outline, and relevant previous chapters, write the complete prose draft of the requested chapter.
+
+Follow the chapter plan closely, developing its scenes into engaging narrative prose with natural dialogue, meaningful character interactions, and appropriate pacing.
+
+Maintain consistency with the established setting, tone, style, characterization, and events of previous chapters. When the outline differs from what has already happened in the manuscript, preserve established continuity rather than introducing contradictions.
 
 [chapter X draft]
 
-Write at least 1500 words. Start on a hook. End on a cliffhanger.
+- Write at least 1,500 words of complete narrative prose.
+- Begin with a compelling hook appropriate to the chapter and its place in the story.
+- Develop each planned scene with sufficient detail, action, dialogue, and character development.
+- Show character motivations and emotions through their choices, behavior, and interactions.
+- Maintain the story's established point of view and narrative voice.
+- End at the chapter's intended stopping point, creating anticipation for what follows without advancing into future chapters.
 
 [/chapter X draft]
+
+Write the chapter itself, not a summary or outline. Do not add explanations, commentary, or suggestions outside the prose.

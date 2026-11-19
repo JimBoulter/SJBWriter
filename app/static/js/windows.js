@@ -9,12 +9,52 @@ async function loadApiKeyStatus() {
   const res = await fetch('/api_key_status');
   const data = await res.json();
 
-  const el = document.getElementById("apiKeyStatus");
+  apiKeyIsSaved = data.status === "saved";
 
-  if (data.status === "saved") {
-    el.innerText = "API Key: Saved";
-  } else {
-    el.innerText = "API Key: Not set";
+  document.getElementById("apiKeyStatus").innerText =
+    apiKeyIsSaved ? "API Key: Saved" : "API Key: Not set";
+
+  updateApiKeySaveButton();
+}
+
+const MIN_API_KEY_LENGTH = 20;
+let apiKeyIsSaved = false;
+
+function updateApiKeySaveButton() {
+  const input = document.getElementById("apiKey");
+  const button = document.getElementById("apiKeySaveBtn");
+  const length = input.value.trim().length;
+
+  button.disabled = length < MIN_API_KEY_LENGTH;
+  button.classList.toggle("hidden", apiKeyIsSaved && length === 0);
+}
+
+async function saveApiKey() {
+  const input = document.getElementById("apiKey");
+  const button = document.getElementById("apiKeySaveBtn");
+  const apiKey = input.value.trim();
+
+  if (apiKey.length < MIN_API_KEY_LENGTH) return;
+
+  button.disabled = true;
+
+  try {
+    const res = await fetch('/save_api_key', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiKey })
+    });
+
+    if (!res.ok) throw new Error("Save failed");
+
+    apiKeyIsSaved = true;
+    input.value = "";
+    document.getElementById("apiKeyStatus").innerText = "API Key: Saved";
+    updateApiKeySaveButton();
+  } catch (error) {
+    document.getElementById("apiKeyStatus").innerText =
+      "Could not save API key. Please try again.";
+    updateApiKeySaveButton();
   }
 }
 
@@ -348,7 +388,7 @@ async function saveSettings() {
     modelSource: settings.modelSource,
     modelName: settings.modelName
   }));
-  if (apiKey) {
+  if (apiKey.trim().length >= MIN_API_KEY_LENGTH) {
     await fetch('/save_api_key', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

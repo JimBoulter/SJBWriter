@@ -56,11 +56,7 @@ def api_get_models():
     model_file = os.path.join(GLOBAL_DIR, "modelList.json")
     order_file = os.path.join(GLOBAL_DIR, "ollama_order.json")
 
-    if not os.path.exists(model_file):
-        return jsonify({"openrouter": [], "ollama": []})
-
-    with open(model_file, "r") as f:
-        data = json.load(f)
+    data = load_model_list()
 
     saved_ollama_models = data.setdefault("ollama", [])
     saved_by_id = {

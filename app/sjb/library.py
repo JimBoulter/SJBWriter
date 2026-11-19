@@ -13,11 +13,15 @@ from sjb.storage import (
 # ===================== STRUCTURE INIT =====================
 
 def ensure_structure():
-    # Install bundled starter content once, in the user's Books folder.
-    # The marker lives in Application Support, outside the movable Books folder.
-    starter_marker = os.path.join(paths.GLOBAL_DIR, ".starter-content-installed")
+    # Each Books folder is initialized independently. Existing libraries are
+    # marked as known without restoring content the writer may have deleted.
+    starter_marker = os.path.join(paths.DATA_ROOT, ".starter-content-installed")
+    books_empty = (
+        not os.path.isdir(paths.DATA_ROOT)
+        or not os.listdir(paths.DATA_ROOT)
+    )
 
-    if paths.FROZEN and not os.path.exists(starter_marker):
+    if paths.FROZEN and books_empty and not os.path.exists(starter_marker):
         required_sources = (
             paths.STARTER_GLOBAL_STATE,
             paths.STARTER_PROMPTS_DIR,
@@ -71,7 +75,10 @@ def ensure_structure():
                 ignore=shutil.ignore_patterns(".DS_Store"),
             )
 
-        # Mark initialization complete so deleted content is never restored.
+    # Mark both freshly initialized and pre-existing Books folders as known.
+    # This prevents later deletion of starter content from triggering a reinstall.
+    if paths.FROZEN and not os.path.exists(starter_marker):
+        os.makedirs(paths.DATA_ROOT, exist_ok=True)
         with open(starter_marker, "w", encoding="utf-8") as f:
             f.write("installed\n")
 

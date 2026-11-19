@@ -82,6 +82,7 @@ coll = COLLECT(
 app = BUNDLE(
     coll,
     name="SJB Writer.app",
+    icon="SJBWriter.icns",
     bundle_identifier=None,
     info_plist={
         "CFBundleName": "SJB Writer",

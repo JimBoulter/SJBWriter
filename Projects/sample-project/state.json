@@ -5,45 +5,76 @@
       "id": "1-quick-setup",
       "items": [
         {
-          "type": "file",
           "filename": "setup.md",
           "title": "Setup",
-          "wordCount": 430
+          "type": "file",
+          "wordCount": 218
         }
       ],
       "title": "1 - Quick Setup",
       "type": "folder"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "id": "3-more-instructions",
-      "items": [],
+      "items": [
+        {
+          "filename": "using-the-ai.md",
+          "title": "3.1 - Using the AI",
+          "type": "file",
+          "wordCount": 199
+        },
+        {
+          "filename": "3-2-prompting.md",
+          "title": "3.2 - Prompting",
+          "type": "file",
+          "wordCount": 421
+        },
+        {
+          "filename": "3-3-context.md",
+          "title": "3.3 - The Dragon Egg Story",
+          "type": "file",
+          "wordCount": 1971
+        },
+        {
+          "filename": "3-4-what-s-next.md",
+          "title": "3.4 - What's Next?",
+          "type": "file",
+          "wordCount": 259
+        }
+      ],
       "title": "3 - More Instructions",
       "type": "folder"
     }
   ],
   "writing": [
     {
-      "collapsed": false,
+      "collapsed": true,
       "id": "2-getting-started",
       "items": [
         {
           "filename": "2-1-look-around.md",
           "title": "2.1 - Look Around",
           "type": "file",
-          "wordCount": 10
+          "wordCount": 257
         },
         {
           "filename": "2-2-create-your-first-writing-file.md",
           "title": "2.2 \u2013 Create Your First Writing File",
           "type": "file",
-          "wordCount": 14
+          "wordCount": 287
         },
         {
           "filename": "2-3-the-gear-menu.md",
           "title": "2.3 \u2013 The Gear Menu",
           "type": "file",
-          "wordCount": 14
+          "wordCount": 347
+        },
+        {
+          "filename": "2-4-idiosyncrasies.md",
+          "title": "2.4 - Idiosyncrasies",
+          "type": "file",
+          "wordCount": 344
         }
       ],
       "title": "2 - Getting Started",
